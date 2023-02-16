@@ -1,40 +1,45 @@
 #include "list.h"
 
-int initListInt(ListInt *_list)
+void initListInt(ListInt *_list)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"initListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     _list->size = 0;
     _list->capacity = LIST_BUF;
     if ((_list->ptr = (int *)malloc(LIST_BUF)) == NULL)
     {
-        return 0;
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
     }
-    return 1;
+    return;
 }
-int freeListInt(ListInt *_list)
+void freeListInt(ListInt *_list)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"freeListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     _list->size = -1;
     _list->capacity = -1;
     free(_list->ptr);
     _list->ptr = NULL;
-    return 1;
+    return;
 }
 int getListInt(ListInt *_list, int _idx)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"getListInt(ListInt *_list, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_idx < LIST_END || _list->size < _idx)
     {
-        return 0;
+        printf("Error: Index %d out of bounds for 0~length %d\n", _idx, _list->size);
+        exit(EX_USAGE);
     }
     else if (_idx == LIST_END)
     {
@@ -42,15 +47,17 @@ int getListInt(ListInt *_list, int _idx)
     }
     return _list->ptr[_idx];
 }
-int addListInt(ListInt *_list, int _element, int _idx)
+void addListInt(ListInt *_list, int _element, int _idx)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"addListInt(ListInt *_list, int _element, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_idx < LIST_END || _list->size < _idx)
     {
-        return 0;
+        printf("Error: Index %d out of bounds for 0~length %d\n", _idx, _list->size);
+        exit(EX_USAGE);
     }
     else if (_idx == LIST_END)
     {
@@ -63,7 +70,8 @@ int addListInt(ListInt *_list, int _element, int _idx)
         if ((tmp = (int *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {
@@ -73,17 +81,19 @@ int addListInt(ListInt *_list, int _element, int _idx)
     memmove(_list->ptr + (_idx + 1), _list->ptr + _idx, (_list->size - _idx) * sizeof(int));
     _list->ptr[_idx] = _element;
     _list->size++;
-    return 1;
+    return;
 }
-int removeListInt(ListInt *_list, int _idx)
+void removeListInt(ListInt *_list, int _idx)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"removeListInt(ListInt *_list, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_idx < LIST_END || _list->size < _idx)
     {
-        return 0;
+        printf("Error: Index %d out of bounds for 0~length %d\n", _idx, _list->size);
+        exit(EX_USAGE);
     }
     else if (_idx == LIST_END)
     {
@@ -98,20 +108,22 @@ int removeListInt(ListInt *_list, int _idx)
         if ((tmp = (int *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {
             _list->ptr = tmp;
         }
     }
-    return 1;
+    return;
 }
-int pushListInt(ListInt *_list, int _element)
+void pushListInt(ListInt *_list, int _element)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"pushListInt(ListInt *_list, int _element)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_list->capacity <= _list->size * sizeof(int))
     {
@@ -120,7 +132,8 @@ int pushListInt(ListInt *_list, int _element)
         if ((tmp = (int *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {
@@ -129,13 +142,14 @@ int pushListInt(ListInt *_list, int _element)
     }
     _list->ptr[_list->size] = _element;
     _list->size++;
-    return 1;
+    return;
 }
 int popListInt(ListInt *_list)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     _list->size--;
     int element = _list->ptr[_list->size];
@@ -146,7 +160,8 @@ int popListInt(ListInt *_list)
         if ((tmp = (int *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {
@@ -156,41 +171,46 @@ int popListInt(ListInt *_list)
     return element;
 }
 
-int initListDouble(ListDouble *_list)
+void initListDouble(ListDouble *_list)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"initListDouble(ListDouble *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     _list->size = 0;
     _list->capacity = LIST_BUF;
     if ((_list->ptr = (double *)malloc(LIST_BUF)) == NULL)
     {
-        return 0;
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
     }
-    return 1;
+    return;
 }
-int freeListDouble(ListDouble *_list)
+void freeListDouble(ListDouble *_list)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"freeListDouble(ListDouble *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     _list->size = -1;
     _list->capacity = -1;
     free(_list->ptr);
     _list->ptr = NULL;
-    return 1;
+    return;
 }
 double getListDouble(ListDouble *_list, int _idx)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"getListDouble(ListDouble *_list, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_idx < LIST_END || _list->size < _idx)
     {
-        return 0;
+        printf("Error: Index %d out of bounds for 0~length %d\n", _idx, _list->size);
+        exit(EX_USAGE);
     }
     else if (_idx == LIST_END)
     {
@@ -198,15 +218,17 @@ double getListDouble(ListDouble *_list, int _idx)
     }
     return _list->ptr[_idx];
 }
-int addListDouble(ListDouble *_list, double _element, int _idx)
+void addListDouble(ListDouble *_list, double _element, int _idx)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"addListDouble(ListDouble *_list, double _element, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_idx < LIST_END || _list->size < _idx)
     {
-        return 0;
+        printf("Error: Index %d out of bounds for 0~length %d\n", _idx, _list->size);
+        exit(EX_USAGE);
     }
     else if (_idx == LIST_END)
     {
@@ -219,7 +241,8 @@ int addListDouble(ListDouble *_list, double _element, int _idx)
         if ((tmp = (double *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {
@@ -229,17 +252,19 @@ int addListDouble(ListDouble *_list, double _element, int _idx)
     memmove(_list->ptr + (_idx + 1), _list->ptr + _idx, (_list->size - _idx) * sizeof(double));
     _list->size++;
     _list->ptr[_idx] = _element;
-    return 1;
+    return;
 }
-int removeListDouble(ListDouble *_list, int _idx)
+void removeListDouble(ListDouble *_list, int _idx)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"removeListDouble(ListDouble *_list, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_idx < LIST_END || _list->size < _idx)
     {
-        return 0;
+        printf("Error: Index %d out of bounds for 0~length %d\n", _idx, _list->size);
+        exit(EX_USAGE);
     }
     else if (_idx == LIST_END)
     {
@@ -254,20 +279,22 @@ int removeListDouble(ListDouble *_list, int _idx)
         if ((tmp = (double *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {
             _list->ptr = tmp;
         }
     }
-    return 1;
+    return;
 }
-int pushListDouble(ListDouble *_list, double _element)
+void pushListDouble(ListDouble *_list, double _element)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"pushListDouble(ListDouble *_list, double _element)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     if (_list->capacity <= _list->size * sizeof(double))
     {
@@ -276,7 +303,8 @@ int pushListDouble(ListDouble *_list, double _element)
         if ((tmp = (double *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {
@@ -285,13 +313,14 @@ int pushListDouble(ListDouble *_list, double _element)
     }
     _list->ptr[_list->size] = _element;
     _list->size++;
-    return 1;
+    return;
 }
 double popListDouble(ListDouble *_list)
 {
     if (_list == NULL)
     {
-        return -1;
+        printf("Error: Cannot invoke \"popListDouble(ListDouble *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
     }
     _list->size--;
     double element = _list->ptr[_list->size];
@@ -302,7 +331,8 @@ double popListDouble(ListDouble *_list)
         if ((tmp = (double *)realloc(_list->ptr, _list->capacity)) == NULL)
         {
             free(_list->ptr);
-            return 0;
+            printf("Error: unable to allocate new heap space\n");
+            exit(EX_OSERR);
         }
         else
         {

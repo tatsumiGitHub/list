@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <time.h>
 
 #include "list.h"
@@ -9,21 +8,7 @@ void testListDouble(void);
 
 int main(void)
 {
-    int i;
-    ListDouble list;
-    initListDouble(&list);
-    for (i = 0; i < 16; i++)
-    {
-        pushListDouble(&list, i * 2.7);
-    }
-    for (i = 0; i < 16; i++)
-    {
-        printf("%2d: %f\n", i, list.ptr[i]);
-    }
-    printf("pop %f\n", popListDouble(&list));
-    pushListDouble(&list, 3.14);
-    printf("%2d: %f\n", list.size - 1, list.ptr[list.size - 1]);
-    freeListDouble(&list);
+    debugTime();
     return 0;
 }
 
