@@ -24,9 +24,13 @@ int freeListInt(ListInt *_list);
 int getListInt(ListInt *_list, int _idx);
 int addListInt(ListInt *_list, int _element, int _idx);
 int removeListInt(ListInt *_list, int _idx);
+int pushListInt(ListInt *_list, int _element);
+int popListInt(ListInt *_list);
 
 int initListDouble(ListDouble *_list);
 int freeListDouble(ListDouble *_list);
 double getListDouble(ListDouble *_list, int _idx);
 int addListDouble(ListDouble *_list, double _element, int _idx);
 int removeListDouble(ListDouble *_list, int _idx);
+int pushListDouble(ListDouble *_list, double _element);
+double popListDouble(ListDouble *_list);

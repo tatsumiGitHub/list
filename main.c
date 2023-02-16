@@ -3,26 +3,48 @@
 
 #include "list.h"
 
+void debugTime(void);
 void testListInt(void);
 void testListDouble(void);
 
 int main(void)
 {
     int i;
+    ListDouble list;
+    initListDouble(&list);
+    for (i = 0; i < 16; i++)
+    {
+        pushListDouble(&list, i * 2.7);
+    }
+    for (i = 0; i < 16; i++)
+    {
+        printf("%2d: %f\n", i, list.ptr[i]);
+    }
+    printf("pop %f\n", popListDouble(&list));
+    pushListDouble(&list, 3.14);
+    printf("%2d: %f\n", list.size - 1, list.ptr[list.size - 1]);
+    freeListDouble(&list);
+    return 0;
+}
+
+void debugTime(void)
+{
+    int i;
     long cpu_time1, cpu_time2;
+    cpu_time1 = clock();
     for (i = 0; i < 10000; i++) {
         testListInt();
     }
-    cpu_time1 = clock();
+    cpu_time2 = clock();
     printf("<ListInt>\n");
-    printf("  cpu time: %ld\n", cpu_time1);
+    printf("  cpu time: %f\n", (cpu_time2 - cpu_time1) * 0.0001);
     for (i = 0; i < 10000; i++) {
         testListDouble();
     }
     cpu_time2 = clock();
-    printf("<ListInt>\n");
-    printf("  cpu time: %ld\n", cpu_time2 - cpu_time1);
-    return 0;
+    printf("<ListDouble>\n");
+    printf("  cpu time: %f\n", (cpu_time2 - cpu_time1) * 0.0001);
+    return;
 }
 
 void testListInt(void)

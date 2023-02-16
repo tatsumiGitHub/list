@@ -71,8 +71,8 @@ int addListInt(ListInt *_list, int _element, int _idx)
         }
     }
     memmove(_list->ptr + (_idx + 1), _list->ptr + _idx, (_list->size - _idx) * sizeof(int));
-    _list->size++;
     _list->ptr[_idx] = _element;
+    _list->size++;
     return 1;
 }
 int removeListInt(ListInt *_list, int _idx)
@@ -106,6 +106,54 @@ int removeListInt(ListInt *_list, int _idx)
         }
     }
     return 1;
+}
+int pushListInt(ListInt *_list, int _element)
+{
+    if (_list == NULL)
+    {
+        return -1;
+    }
+    if (_list->capacity <= _list->size * sizeof(int))
+    {
+        int *tmp;
+        _list->capacity += LIST_BUF;
+        if ((tmp = (int *)realloc(_list->ptr, _list->capacity)) == NULL)
+        {
+            free(_list->ptr);
+            return 0;
+        }
+        else
+        {
+            _list->ptr = tmp;
+        }
+    }
+    _list->ptr[_list->size] = _element;
+    _list->size++;
+    return 1;
+}
+int popListInt(ListInt *_list)
+{
+    if (_list == NULL)
+    {
+        return -1;
+    }
+    _list->size--;
+    int element = _list->ptr[_list->size];
+    if (LIST_BUF < _list->capacity && _list->size * sizeof(int) + LIST_BUF < _list->capacity)
+    {
+        int *tmp;
+        _list->capacity -= LIST_BUF;
+        if ((tmp = (int *)realloc(_list->ptr, _list->capacity)) == NULL)
+        {
+            free(_list->ptr);
+            return 0;
+        }
+        else
+        {
+            _list->ptr = tmp;
+        }
+    }
+    return element;
 }
 
 int initListDouble(ListDouble *_list)
@@ -214,4 +262,52 @@ int removeListDouble(ListDouble *_list, int _idx)
         }
     }
     return 1;
+}
+int pushListDouble(ListDouble *_list, double _element)
+{
+    if (_list == NULL)
+    {
+        return -1;
+    }
+    if (_list->capacity <= _list->size * sizeof(double))
+    {
+        double *tmp;
+        _list->capacity += LIST_BUF;
+        if ((tmp = (double *)realloc(_list->ptr, _list->capacity)) == NULL)
+        {
+            free(_list->ptr);
+            return 0;
+        }
+        else
+        {
+            _list->ptr = tmp;
+        }
+    }
+    _list->ptr[_list->size] = _element;
+    _list->size++;
+    return 1;
+}
+double popListDouble(ListDouble *_list)
+{
+    if (_list == NULL)
+    {
+        return -1;
+    }
+    _list->size--;
+    double element = _list->ptr[_list->size];
+    if (LIST_BUF < _list->capacity && _list->size * sizeof(double) + LIST_BUF < _list->capacity)
+    {
+        double *tmp;
+        _list->capacity -= LIST_BUF;
+        if ((tmp = (double *)realloc(_list->ptr, _list->capacity)) == NULL)
+        {
+            free(_list->ptr);
+            return 0;
+        }
+        else
+        {
+            _list->ptr = tmp;
+        }
+    }
+    return element;
 }
