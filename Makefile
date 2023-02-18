@@ -2,7 +2,7 @@ PROGRAM	= main
 OBJS	= main.o list.o
 
 SRCS	= $(OBJS:%.o=%.cpp)
-CC		= gcc
+CC		= clang
 CCFLAGS	= -Wall -O2
 LFLAGS	=
 

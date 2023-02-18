@@ -144,6 +144,15 @@ void pushListInt(ListInt *_list, int _element)
     _list->size++;
     return;
 }
+int peekListInt(ListInt *_list)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    return _list->ptr[_list->size - 1];
+}
 int popListInt(ListInt *_list)
 {
     if (_list == NULL)
@@ -169,6 +178,123 @@ int popListInt(ListInt *_list)
         }
     }
     return element;
+}
+void qsortListInt(ListInt *_list, int SORT_OPTION)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    int i, j, left, right;
+    int tmp, pivot;
+    ListInt left_list, right_list;
+    initListInt(&left_list);
+    initListInt(&right_list);
+    pushListInt(&left_list, 0);
+    pushListInt(&right_list, _list->size - 1);
+
+    if (SORT_OPTION == ACS_SORT)
+    {
+        while (left_list.size != 0 && right_list.size != 0)
+        {
+            left = popListInt(&left_list);
+            right = popListInt(&right_list);
+            i = left;
+            j = right;
+            pivot = _list->ptr[(i + j) / 2];
+            while (1)
+            {
+                while (_list->ptr[i] < pivot)
+                {
+                    i++;
+                }
+                while (pivot < _list->ptr[j])
+                {
+                    j--;
+                }
+                if (j <= i)
+                {
+                    break;
+                }
+
+                tmp = _list->ptr[i];
+                _list->ptr[i] = _list->ptr[j];
+                _list->ptr[j] = tmp;
+                i++;
+                j--;
+            }
+            if (j + 1 < right)
+            {
+                pushListInt(&left_list, j + 1);
+                pushListInt(&right_list, right);
+            }
+            if (left < i - 1)
+            {
+                pushListInt(&left_list, left);
+                pushListInt(&right_list, i - 1);
+            }
+        }
+    }
+    else
+    {
+        while (left_list.size != 0 && right_list.size != 0)
+        {
+            left = popListInt(&left_list);
+            right = popListInt(&right_list);
+            i = left;
+            j = right;
+            pivot = _list->ptr[(i + j) / 2];
+            while (1)
+            {
+                while (pivot < _list->ptr[i])
+                {
+                    i++;
+                }
+                while (_list->ptr[j] < pivot)
+                {
+                    j--;
+                }
+                if (j <= i)
+                {
+                    break;
+                }
+
+                tmp = _list->ptr[i];
+                _list->ptr[i] = _list->ptr[j];
+                _list->ptr[j] = tmp;
+                i++;
+                j--;
+            }
+            if (j + 1 < right)
+            {
+                pushListInt(&left_list, j + 1);
+                pushListInt(&right_list, right);
+            }
+            if (left < i - 1)
+            {
+                pushListInt(&left_list, left);
+                pushListInt(&right_list, i - 1);
+            }
+        }
+    }
+    return;
+}
+void showListInt(ListInt *_list)
+{
+    int i;
+    printf("size: %d\n", _list->size);
+    printf("[");
+    for (i = 0; i < _list->size; i++)
+    {
+        printf("%d", _list->ptr[i]);
+        if (i < _list->size - 1)
+        {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    return;
 }
 
 void initListDouble(ListDouble *_list)
@@ -340,4 +466,121 @@ double popListDouble(ListDouble *_list)
         }
     }
     return element;
+}
+void qsortListDouble(ListDouble *_list, int SORT_OPTION)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    int i, j, left, right;
+    double tmp, pivot;
+    ListInt left_list, right_list;
+    initListInt(&left_list);
+    initListInt(&right_list);
+    pushListInt(&left_list, 0);
+    pushListInt(&right_list, _list->size - 1);
+
+    if (SORT_OPTION == ACS_SORT)
+    {
+        while (left_list.size != 0 && right_list.size != 0)
+        {
+            left = popListInt(&left_list);
+            right = popListInt(&right_list);
+            i = left;
+            j = right;
+            pivot = _list->ptr[(i + j) / 2];
+            while (1)
+            {
+                while (_list->ptr[i] < pivot)
+                {
+                    i++;
+                }
+                while (pivot < _list->ptr[j])
+                {
+                    j--;
+                }
+                if (j <= i)
+                {
+                    break;
+                }
+
+                tmp = _list->ptr[i];
+                _list->ptr[i] = _list->ptr[j];
+                _list->ptr[j] = tmp;
+                i++;
+                j--;
+            }
+            if (j + 1 < right)
+            {
+                pushListInt(&left_list, j + 1);
+                pushListInt(&right_list, right);
+            }
+            if (left < i - 1)
+            {
+                pushListInt(&left_list, left);
+                pushListInt(&right_list, i - 1);
+            }
+        }
+    }
+    else
+    {
+        while (left_list.size != 0 && right_list.size != 0)
+        {
+            left = popListInt(&left_list);
+            right = popListInt(&right_list);
+            i = left;
+            j = right;
+            pivot = _list->ptr[(i + j) / 2];
+            while (1)
+            {
+                while (pivot < _list->ptr[i])
+                {
+                    i++;
+                }
+                while (_list->ptr[j] < pivot)
+                {
+                    j--;
+                }
+                if (j <= i)
+                {
+                    break;
+                }
+
+                tmp = _list->ptr[i];
+                _list->ptr[i] = _list->ptr[j];
+                _list->ptr[j] = tmp;
+                i++;
+                j--;
+            }
+            if (j + 1 < right)
+            {
+                pushListInt(&left_list, j + 1);
+                pushListInt(&right_list, right);
+            }
+            if (left < i - 1)
+            {
+                pushListInt(&left_list, left);
+                pushListInt(&right_list, i - 1);
+            }
+        }
+    }
+    return;
+}
+void showListDouble(ListDouble *_list)
+{
+    int i;
+    printf("size: %d\n", _list->size);
+    printf("[");
+    for (i = 0; i < _list->size; i++)
+    {
+        printf("%f", _list->ptr[i]);
+        if (i < _list->size - 1)
+        {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    return;
 }
