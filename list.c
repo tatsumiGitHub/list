@@ -43,6 +43,21 @@ int getListInt(ListInt *_list, unsigned long _idx)
     }
     return _list->ptr[_idx];
 }
+void setListInt(ListInt *_list, int _element, unsigned long _idx)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"addListInt(ListInt *_list, int _element, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_list->size <= _idx)
+    {
+        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        exit(EX_USAGE);
+    }
+    _list->ptr[_idx] = _element;
+    return;
+}
 void addListInt(ListInt *_list, int _element, unsigned long _idx)
 {
     if (_list == NULL)
@@ -338,6 +353,21 @@ double getListDouble(ListDouble *_list, unsigned long _idx)
     }
     return _list->ptr[_idx];
 }
+void setListDouble(ListDouble *_list, double _element, unsigned long _idx)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"addListDouble(ListDouble *_list, double _element, int _idx)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_list->size <= _idx)
+    {
+        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        exit(EX_USAGE);
+    }
+    _list->ptr[_idx] = _element;
+    return;
+}
 void addListDouble(ListDouble *_list, double _element, unsigned long _idx)
 {
     if (_list == NULL)
@@ -366,8 +396,8 @@ void addListDouble(ListDouble *_list, double _element, unsigned long _idx)
         }
     }
     memmove(_list->ptr + (_idx + 1), _list->ptr + _idx, (_list->size - _idx) * sizeof(double));
-    _list->size++;
     _list->ptr[_idx] = _element;
+    _list->size++;
     return;
 }
 void removeListDouble(ListDouble *_list, unsigned long _idx)

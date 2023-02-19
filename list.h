@@ -24,6 +24,7 @@ typedef struct
 void initListInt(ListInt *_list);
 void freeListInt(ListInt *_list);
 int getListInt(ListInt *_list, unsigned long _idx);
+void setListInt(ListInt *_list, int _element, unsigned long _idx);
 void addListInt(ListInt *_list, int _element, unsigned long _idx);
 void removeListInt(ListInt *_list, unsigned long _idx);
 void pushListInt(ListInt *_list, int _element);
@@ -35,6 +36,7 @@ void showListInt(ListInt *_list);
 void initListDouble(ListDouble *_list);
 void freeListDouble(ListDouble *_list);
 double getListDouble(ListDouble *_list, unsigned long _idx);
+void setListDouble(ListDouble *_list, double _element, unsigned long _idx);
 void addListDouble(ListDouble *_list, double _element, unsigned long _idx);
 void removeListDouble(ListDouble *_list, unsigned long _idx);
 void pushListDouble(ListDouble *_list, double _element);
