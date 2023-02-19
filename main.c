@@ -2,17 +2,83 @@
 
 #include "list.h"
 
-void debugSort(void);
-void debugTime(void);
+void testSort(void);
 
 int main(void)
 {
-    debugSort();
-    // debugTime();
+    testSort();
     return 0;
 }
 
-void debugSort(void)
+int cmp_int(const void *_x, const void *_y)
+{
+    if (*(int *)_y < *(int *)_x)
+    {
+        return 1;
+    }
+    else if (*(int *)_x < *(int *)_y)
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+int cmp_double(const void *_x, const void *_y)
+{
+    if (*(double *)_y < *(double *)_x)
+    {
+        return 1;
+    }
+    else if (*(double *)_x < *(double *)_y)
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+void testSortArray(void)
+{
+    srand((unsigned int)time(NULL));
+    int i;
+    long cpu_time1, cpu_time2;
+    size_t num = 100000;
+    int *list_int;
+    if ((list_int = (int *)malloc(num * sizeof(int))) == NULL)
+    {
+        return;
+    }
+    for (i = 0; i < num; i++)
+    {
+        list_int[i] = rand();
+    }
+    cpu_time1 = clock();
+    qsort(list_int, num, sizeof(int), cmp_int);
+    cpu_time2 = clock();
+    free(list_int);
+    printf("<sort ArrayInt>\n");
+    printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
+    double *list_double;
+    if ((list_double = (double *)malloc(num * sizeof(double))) == NULL)
+    {
+        return;
+    }
+    for (i = 0; i < num; i++)
+    {
+        list_double[i] = rand() * 0.000001;
+    }
+    cpu_time1 = clock();
+    qsort(list_double, num, sizeof(double), cmp_double);
+    cpu_time2 = clock();
+    free(list_double);
+    printf("<sort ArrayDouble>\n");
+    printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
+    return;
+}
+void testSortList(void)
 {
     srand((unsigned int)time(NULL));
     int i;
@@ -43,45 +109,9 @@ void debugSort(void)
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     return;
 }
-
-void debugTime(void)
+void testSort(void)
 {
-    int i, j;
-    ListInt list_int;
-    ListDouble list_double;
-    long cpu_time1, cpu_time2;
-    cpu_time1 = clock();
-    for (i = 0; i < 10000; i++)
-    {
-        initListInt(&list_int);
-        for (j = 0; j < 10000; j++)
-        {
-            pushListInt(&list_int, j);
-        }
-        for (j = 0; j < 10000; j++)
-        {
-            popListInt(&list_int);
-        }
-        freeListInt(&list_int);
-    }
-    cpu_time2 = clock();
-    printf("<ListInt>\n");
-    printf("  cpu time: %f\n", (cpu_time2 - cpu_time1) * 0.0001);
-    for (i = 0; i < 10000; i++)
-    {
-        initListDouble(&list_double);
-        for (j = 0; j < 10000; j++)
-        {
-            pushListDouble(&list_double, j);
-        }
-        for (j = 0; j < 10000; j++)
-        {
-            popListDouble(&list_double);
-        }
-        freeListDouble(&list_double);
-    }
-    cpu_time2 = clock();
-    printf("<ListDouble>\n");
-    printf("  cpu time: %f\n", (cpu_time2 - cpu_time1) * 0.0001);
+    testSortArray();
+    testSortList();
     return;
 }
