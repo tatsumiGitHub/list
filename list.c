@@ -1,10 +1,10 @@
 #include "list.h"
 
-void initListInt(ListInt *_list)
+void init_ListInt(ListInt *_list)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"initListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"init_ListInt(ListInt *_list)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     _list->size = 0;
@@ -16,7 +16,29 @@ void initListInt(ListInt *_list)
     }
     return;
 }
-void freeListInt(ListInt *_list)
+void asList_ListInt(ListInt *_list, const int *_array, unsigned long _size)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"asListInt(ListInt *_list, int *_array, unsigned long _size)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_array == NULL)
+    {
+        printf("Error: Cannot invoke \"asListInt(ListInt *_list, int *_array, unsigned long _size)\" because \"<local2>\" is null\n");
+        exit(EX_USAGE);
+    }
+    _list->size = _size;
+    _list->capacity = (_size / LIST_BUF + 1) * LIST_BUF * sizeof(int);
+    if ((_list->ptr = (int *)malloc(_list->capacity)) == NULL)
+    {
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
+    }
+    memcpy(_list->ptr, _array, _list->capacity);
+    return;
+}
+void free_ListInt(ListInt *_list)
 {
     if (_list == NULL)
     {
@@ -29,7 +51,29 @@ void freeListInt(ListInt *_list)
     _list->ptr = NULL;
     return;
 }
-int getListInt(ListInt *_list, unsigned long _idx)
+void copy_ListInt(ListInt *_list_dst, const ListInt *_list_src)
+{
+    if (_list_dst == NULL)
+    {
+        printf("Error: Cannot invoke \"copyListInt(ListInt *_list_dst, const ListInt *_list_src)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_list_src == NULL)
+    {
+        printf("Error: Cannot invoke \"copyListInt(ListInt *_list_dst, const ListInt *_list_src)\" because \"<local2>\" is null\n");
+        exit(EX_USAGE);
+    }
+    _list_dst->size = _list_src->size;
+    _list_dst->capacity = _list_src->capacity;
+    if ((_list_dst->ptr = (int *)malloc(_list_dst->capacity)) == NULL)
+    {
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
+    }
+    memcpy(_list_dst->ptr, _list_src->ptr, _list_src->capacity);
+    return;
+}
+int get_ListInt(ListInt *_list, unsigned long _idx)
 {
     if (_list == NULL)
     {
@@ -43,11 +87,11 @@ int getListInt(ListInt *_list, unsigned long _idx)
     }
     return _list->ptr[_idx];
 }
-void setListInt(ListInt *_list, int _element, unsigned long _idx)
+void set_ListInt(ListInt *_list, int _element, unsigned long _idx)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"addListInt(ListInt *_list, int _element, int _idx)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"setListInt(ListInt *_list, int _element, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_list->size <= _idx)
@@ -58,7 +102,7 @@ void setListInt(ListInt *_list, int _element, unsigned long _idx)
     _list->ptr[_idx] = _element;
     return;
 }
-void addListInt(ListInt *_list, int _element, unsigned long _idx)
+void add_ListInt(ListInt *_list, int _element, unsigned long _idx)
 {
     if (_list == NULL)
     {
@@ -90,7 +134,7 @@ void addListInt(ListInt *_list, int _element, unsigned long _idx)
     _list->size++;
     return;
 }
-void removeListInt(ListInt *_list, unsigned long _idx)
+void remove_ListInt(ListInt *_list, unsigned long _idx)
 {
     if (_list == NULL)
     {
@@ -121,11 +165,11 @@ void removeListInt(ListInt *_list, unsigned long _idx)
     }
     return;
 }
-void pushListInt(ListInt *_list, int _element)
+void push_ListInt(ListInt *_list, int _element)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"pushListInt(ListInt *_list, int _element)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"push_ListInt(ListInt *_list, int _element)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_list->capacity <= _list->size * sizeof(int))
@@ -147,11 +191,11 @@ void pushListInt(ListInt *_list, int _element)
     _list->size++;
     return;
 }
-int peekListInt(ListInt *_list)
+int peek_ListInt(ListInt *_list)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"peekListInt(ListInt *_list)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_list->size == 0)
@@ -160,11 +204,11 @@ int peekListInt(ListInt *_list)
     }
     return _list->ptr[_list->size - 1];
 }
-int popListInt(ListInt *_list)
+int pop_ListInt(ListInt *_list)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"pop_ListInt(ListInt *_list)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_list->size == 0)
@@ -190,27 +234,27 @@ int popListInt(ListInt *_list)
     }
     return element;
 }
-void qsortListInt(ListInt *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)
+void qsort_ListInt(ListInt *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"qsortListInt(ListInt *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     int i, j, left, right;
     int tmp, pivot;
     ListInt left_list, right_list;
-    initListInt(&left_list);
-    initListInt(&right_list);
-    pushListInt(&left_list, _left);
-    pushListInt(&right_list, _right);
+    init_ListInt(&left_list);
+    init_ListInt(&right_list);
+    push_ListInt(&left_list, _left);
+    push_ListInt(&right_list, _right);
 
     if (SORT_OPTION == ACS_SORT)
     {
         while (left_list.size != 0 && right_list.size != 0)
         {
-            left = popListInt(&left_list);
-            right = popListInt(&right_list);
+            left = pop_ListInt(&left_list);
+            right = pop_ListInt(&right_list);
             i = left;
             j = right;
             pivot = _list->ptr[(i + j) / 2];
@@ -237,13 +281,13 @@ void qsortListInt(ListInt *_list, unsigned long _left, unsigned long _right, int
             }
             if (j + 1 < right)
             {
-                pushListInt(&left_list, j + 1);
-                pushListInt(&right_list, right);
+                push_ListInt(&left_list, j + 1);
+                push_ListInt(&right_list, right);
             }
             if (left < i - 1)
             {
-                pushListInt(&left_list, left);
-                pushListInt(&right_list, i - 1);
+                push_ListInt(&left_list, left);
+                push_ListInt(&right_list, i - 1);
             }
         }
     }
@@ -251,8 +295,8 @@ void qsortListInt(ListInt *_list, unsigned long _left, unsigned long _right, int
     {
         while (left_list.size != 0 && right_list.size != 0)
         {
-            left = popListInt(&left_list);
-            right = popListInt(&right_list);
+            left = pop_ListInt(&left_list);
+            right = pop_ListInt(&right_list);
             i = left;
             j = right;
             pivot = _list->ptr[(i + j) / 2];
@@ -279,21 +323,41 @@ void qsortListInt(ListInt *_list, unsigned long _left, unsigned long _right, int
             }
             if (j + 1 < right)
             {
-                pushListInt(&left_list, j + 1);
-                pushListInt(&right_list, right);
+                push_ListInt(&left_list, j + 1);
+                push_ListInt(&right_list, right);
             }
             if (left < i - 1)
             {
-                pushListInt(&left_list, left);
-                pushListInt(&right_list, i - 1);
+                push_ListInt(&left_list, left);
+                push_ListInt(&right_list, i - 1);
             }
         }
     }
-    freeListInt(&left_list);
-    freeListInt(&right_list);
+    free_ListInt(&left_list);
+    free_ListInt(&right_list);
     return;
 }
-void showListInt(ListInt *_list)
+void toArray_ListInt(int *_array, const ListInt *_list)
+{
+    if (_array == NULL)
+    {
+        printf("Error: Cannot invoke \"toArray_ListInt(int *_array, const ListInt *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"toArray_ListInt(int *_array, const ListInt *_list)\" because \"<local2>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if ((_array = (int *)malloc(_list->size * sizeof(int))) == NULL)
+    {
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
+    }
+    memcpy(_array, _list->ptr, _list->size * sizeof(int));
+    return;
+}
+void show_ListInt(ListInt *_list)
 {
     int i;
     printf("size: %zu\n", _list->size);
@@ -310,7 +374,7 @@ void showListInt(ListInt *_list)
     return;
 }
 
-void initListDouble(ListDouble *_list)
+void init_ListDouble(ListDouble *_list)
 {
     if (_list == NULL)
     {
@@ -326,7 +390,29 @@ void initListDouble(ListDouble *_list)
     }
     return;
 }
-void freeListDouble(ListDouble *_list)
+void asList_ListDouble(ListDouble *_list, const double *_array, unsigned long _size)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"asListDouble(ListDouble *_list, double *_array, unsigned long _size)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_array == NULL)
+    {
+        printf("Error: Cannot invoke \"asListDouble(ListDouble *_list, double *_array, unsigned long _size)\" because \"<local2>\" is null\n");
+        exit(EX_USAGE);
+    }
+    _list->size = _size;
+    _list->capacity = (_size / LIST_BUF + 1) * LIST_BUF * sizeof(double);
+    if ((_list->ptr = (double *)malloc(_list->capacity)) == NULL)
+    {
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
+    }
+    memcpy(_list->ptr, _array, _list->capacity);
+    return;
+}
+void free_ListDouble(ListDouble *_list)
 {
     if (_list == NULL)
     {
@@ -339,7 +425,29 @@ void freeListDouble(ListDouble *_list)
     _list->ptr = NULL;
     return;
 }
-double getListDouble(ListDouble *_list, unsigned long _idx)
+void copy_ListDouble(ListDouble *_list_dst, const ListDouble *_list_src)
+{
+    if (_list_dst == NULL)
+    {
+        printf("Error: Cannot invoke \"copyListDouble(ListDouble *_list_dst, const ListDouble *_list_src)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_list_src == NULL)
+    {
+        printf("Error: Cannot invoke \"copyListDouble(ListDouble *_list_dst, const ListDouble *_list_src)\" because \"<local2>\" is null\n");
+        exit(EX_USAGE);
+    }
+    _list_dst->size = _list_src->size;
+    _list_dst->capacity = _list_src->capacity;
+    if ((_list_dst->ptr = (double *)malloc(_list_dst->capacity)) == NULL)
+    {
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
+    }
+    memcpy(_list_dst->ptr, _list_src->ptr, _list_src->capacity);
+    return;
+}
+double get_ListDouble(ListDouble *_list, unsigned long _idx)
 {
     if (_list == NULL)
     {
@@ -353,11 +461,11 @@ double getListDouble(ListDouble *_list, unsigned long _idx)
     }
     return _list->ptr[_idx];
 }
-void setListDouble(ListDouble *_list, double _element, unsigned long _idx)
+void set_ListDouble(ListDouble *_list, double _element, unsigned long _idx)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"addListDouble(ListDouble *_list, double _element, int _idx)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"setListDouble(ListDouble *_list, double _element, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_list->size <= _idx)
@@ -368,7 +476,7 @@ void setListDouble(ListDouble *_list, double _element, unsigned long _idx)
     _list->ptr[_idx] = _element;
     return;
 }
-void addListDouble(ListDouble *_list, double _element, unsigned long _idx)
+void add_ListDouble(ListDouble *_list, double _element, unsigned long _idx)
 {
     if (_list == NULL)
     {
@@ -400,7 +508,7 @@ void addListDouble(ListDouble *_list, double _element, unsigned long _idx)
     _list->size++;
     return;
 }
-void removeListDouble(ListDouble *_list, unsigned long _idx)
+void remove_ListDouble(ListDouble *_list, unsigned long _idx)
 {
     if (_list == NULL)
     {
@@ -431,7 +539,7 @@ void removeListDouble(ListDouble *_list, unsigned long _idx)
     }
     return;
 }
-void pushListDouble(ListDouble *_list, double _element)
+void push_ListDouble(ListDouble *_list, double _element)
 {
     if (_list == NULL)
     {
@@ -457,11 +565,11 @@ void pushListDouble(ListDouble *_list, double _element)
     _list->size++;
     return;
 }
-double peekListDouble(ListDouble *_list)
+double peek_ListDouble(ListDouble *_list)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"popListDouble(ListDouble *_list)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"peekListDouble(ListDouble *_list)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_list->size == 0)
@@ -470,7 +578,7 @@ double peekListDouble(ListDouble *_list)
     }
     return _list->ptr[_list->size - 1];
 }
-double popListDouble(ListDouble *_list)
+double pop_ListDouble(ListDouble *_list)
 {
     if (_list == NULL)
     {
@@ -500,27 +608,27 @@ double popListDouble(ListDouble *_list)
     }
     return element;
 }
-void qsortListDouble(ListDouble *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)
+void qsort_ListDouble(ListDouble *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"popListInt(ListInt *_list)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"qsortListDouble(ListDouble *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     int i, j, left, right;
     double tmp, pivot;
     ListInt left_list, right_list;
-    initListInt(&left_list);
-    initListInt(&right_list);
-    pushListInt(&left_list, _left);
-    pushListInt(&right_list, _right);
+    init_ListInt(&left_list);
+    init_ListInt(&right_list);
+    push_ListInt(&left_list, _left);
+    push_ListInt(&right_list, _right);
 
     if (SORT_OPTION == ACS_SORT)
     {
         while (left_list.size != 0 && right_list.size != 0)
         {
-            left = popListInt(&left_list);
-            right = popListInt(&right_list);
+            left = pop_ListInt(&left_list);
+            right = pop_ListInt(&right_list);
             i = left;
             j = right;
             pivot = _list->ptr[(i + j) / 2];
@@ -547,13 +655,13 @@ void qsortListDouble(ListDouble *_list, unsigned long _left, unsigned long _righ
             }
             if (j + 1 < right)
             {
-                pushListInt(&left_list, j + 1);
-                pushListInt(&right_list, right);
+                push_ListInt(&left_list, j + 1);
+                push_ListInt(&right_list, right);
             }
             if (left < i - 1)
             {
-                pushListInt(&left_list, left);
-                pushListInt(&right_list, i - 1);
+                push_ListInt(&left_list, left);
+                push_ListInt(&right_list, i - 1);
             }
         }
     }
@@ -561,8 +669,8 @@ void qsortListDouble(ListDouble *_list, unsigned long _left, unsigned long _righ
     {
         while (left_list.size != 0 && right_list.size != 0)
         {
-            left = popListInt(&left_list);
-            right = popListInt(&right_list);
+            left = pop_ListInt(&left_list);
+            right = pop_ListInt(&right_list);
             i = left;
             j = right;
             pivot = _list->ptr[(i + j) / 2];
@@ -589,21 +697,41 @@ void qsortListDouble(ListDouble *_list, unsigned long _left, unsigned long _righ
             }
             if (j + 1 < right)
             {
-                pushListInt(&left_list, j + 1);
-                pushListInt(&right_list, right);
+                push_ListInt(&left_list, j + 1);
+                push_ListInt(&right_list, right);
             }
             if (left < i - 1)
             {
-                pushListInt(&left_list, left);
-                pushListInt(&right_list, i - 1);
+                push_ListInt(&left_list, left);
+                push_ListInt(&right_list, i - 1);
             }
         }
     }
-    freeListInt(&left_list);
-    freeListInt(&right_list);
+    free_ListInt(&left_list);
+    free_ListInt(&right_list);
     return;
 }
-void showListDouble(ListDouble *_list)
+void toArray_ListDouble(double *_array, const ListDouble *_list)
+{
+    if (_array == NULL)
+    {
+        printf("Error: Cannot invoke \"toArray_ListDouble(double *_array, const ListDouble *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"toArray_ListDouble(double *_array, const ListDouble *_list)\" because \"<local2>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if ((_array = (double *)malloc(_list->size * sizeof(double))) == NULL)
+    {
+        printf("Error: unable to allocate new heap space\n");
+        exit(EX_OSERR);
+    }
+    memcpy(_array, _list->ptr, _list->size * sizeof(double));
+    return;
+}
+void show_ListDouble(ListDouble *_list)
 {
     int i;
     printf("size: %zu\n", _list->size);

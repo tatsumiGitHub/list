@@ -46,34 +46,34 @@ void testSortArray(void)
     int i;
     long cpu_time1, cpu_time2;
     size_t num = 100000;
-    int *list_int;
-    if ((list_int = (int *)malloc(num * sizeof(int))) == NULL)
+    int *array_int;
+    if ((array_int = (int *)malloc(num * sizeof(int))) == NULL)
     {
         return;
     }
     for (i = 0; i < num; i++)
     {
-        list_int[i] = rand();
+        array_int[i] = rand();
     }
     cpu_time1 = clock();
-    qsort(list_int, num, sizeof(int), cmp_int);
+    qsort(array_int, num, sizeof(int), cmp_int);
     cpu_time2 = clock();
-    free(list_int);
+    free(array_int);
     printf("<sort ArrayInt>\n");
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
-    double *list_double;
-    if ((list_double = (double *)malloc(num * sizeof(double))) == NULL)
+    double *array_double;
+    if ((array_double = (double *)malloc(num * sizeof(double))) == NULL)
     {
         return;
     }
     for (i = 0; i < num; i++)
     {
-        list_double[i] = rand() * 0.000001;
+        array_double[i] = rand() * 0.000001;
     }
     cpu_time1 = clock();
-    qsort(list_double, num, sizeof(double), cmp_double);
+    qsort(array_double, num, sizeof(double), cmp_double);
     cpu_time2 = clock();
-    free(list_double);
+    free(array_double);
     printf("<sort ArrayDouble>\n");
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     return;
@@ -84,27 +84,27 @@ void testSortList(void)
     int i;
     long cpu_time1, cpu_time2;
     ListInt list_int;
-    initListInt(&list_int);
+    init_ListInt(&list_int);
     for (i = 0; i < 100000; i++)
     {
-        pushListInt(&list_int, rand());
+        push_ListInt(&list_int, rand());
     }
     cpu_time1 = clock();
-    qsortListInt(&list_int, 0, list_int.size - 1, ACS_SORT);
+    qsort_ListInt(&list_int, 0, list_int.size - 1, ACS_SORT);
     cpu_time2 = clock();
-    freeListInt(&list_int);
+    free_ListInt(&list_int);
     printf("<sort ListInt>\n");
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     ListDouble list_double;
-    initListDouble(&list_double);
+    init_ListDouble(&list_double);
     for (i = 0; i < 100000; i++)
     {
-        pushListDouble(&list_double, rand() * 0.000001);
+        push_ListDouble(&list_double, rand() * 0.000001);
     }
     cpu_time1 = clock();
-    qsortListDouble(&list_double, 0, list_double.size - 1, ACS_SORT);
+    qsort_ListDouble(&list_double, 0, list_double.size - 1, ACS_SORT);
     cpu_time2 = clock();
-    freeListDouble(&list_double);
+    free_ListDouble(&list_double);
     printf("<sort ListDouble>\n");
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     return;
