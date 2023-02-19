@@ -316,8 +316,8 @@ void freeListDouble(ListDouble *_list)
         printf("Error: Cannot invoke \"freeListDouble(ListDouble *_list)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    _list->size = -1;
-    _list->capacity = -1;
+    _list->size = 0;
+    _list->capacity = 0;
     free(_list->ptr);
     _list->ptr = NULL;
     return;
