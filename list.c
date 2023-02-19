@@ -274,6 +274,8 @@ void qsortListInt(ListInt *_list, unsigned long _left, unsigned long _right, int
             }
         }
     }
+    freeListInt(&left_list);
+    freeListInt(&right_list);
     return;
 }
 void showListInt(ListInt *_list)
@@ -567,6 +569,8 @@ void qsortListDouble(ListDouble *_list, unsigned long _left, unsigned long _righ
             }
         }
     }
+    freeListInt(&left_list);
+    freeListInt(&right_list);
     return;
 }
 void showListDouble(ListDouble *_list)
