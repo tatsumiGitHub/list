@@ -56,9 +56,11 @@ void testListInt(void)
     show_ListInt(&list);
 
     printf("\nset_ListInt\n");
-    set_ListInt(&list, 2048, 10);
+    set_ListInt(&list, -1, 10);
     show_ListInt(&list);
 
+    printf("\nindexOf_ListInt(99) = %ld\n", indexOf_ListInt(&list, 99));
+    printf("\nindexOf_ListInt(1024) = %ld\n", indexOf_ListInt(&list, 1024));
     printf("\nget_ListInt(50) = %d\n", get_ListInt(&list, 50));
     printf("\npeek_ListInt() = %d\n", peek_ListInt(&list));
     show_ListInt(&list);
@@ -101,7 +103,7 @@ void testListDouble(void)
     show_ListDouble(&list);
 
     printf("\nadd_ListDouble\n");
-    add_ListDouble(&list, 1024.2028, 10);
+    add_ListDouble(&list, 1.024, 10);
     show_ListDouble(&list);
 
     printf("\nremove_ListDouble\n");
@@ -109,9 +111,11 @@ void testListDouble(void)
     show_ListDouble(&list);
 
     printf("\nset_ListDouble\n");
-    set_ListDouble(&list, 2048.1024, 10);
+    set_ListDouble(&list, -0.1, 10);
     show_ListDouble(&list);
 
+    printf("\nindexOf_ListDouble(9.9) = %ld\n", indexOf_ListDouble(&list, 9.9));
+    printf("\nindexOf_ListDouble(1024) = %ld\n", indexOf_ListDouble(&list, 1024));
     printf("\nget_ListDouble(50) = %f\n", get_ListDouble(&list, 50));
     printf("\npeek_ListDouble() = %f\n", peek_ListDouble(&list));
     show_ListDouble(&list);

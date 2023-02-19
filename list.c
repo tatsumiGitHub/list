@@ -73,7 +73,7 @@ void copy_ListInt(ListInt *_list_dst, const ListInt *_list_src)
     memcpy(_list_dst->ptr, _list_src->ptr, _list_src->capacity);
     return;
 }
-int get_ListInt(ListInt *_list, long _idx)
+int get_ListInt(const ListInt *_list, long _idx)
 {
     if (_list == NULL)
     {
@@ -101,6 +101,23 @@ void set_ListInt(ListInt *_list, int _element, long _idx)
     }
     _list->ptr[_idx] = _element;
     return;
+}
+long indexOf_ListInt(const ListInt *_list, int _element)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"indexOf_ListInt(const ListInt *_list, int _element)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    long i;
+    for (i = 0; i < _list->size; i++)
+    {
+        if (_list->ptr[i] == _element)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 void add_ListInt(ListInt *_list, int _element, long _idx)
 {
@@ -191,7 +208,7 @@ void push_ListInt(ListInt *_list, int _element)
     _list->size++;
     return;
 }
-int peek_ListInt(ListInt *_list)
+int peek_ListInt(const ListInt *_list)
 {
     if (_list == NULL)
     {
@@ -447,7 +464,7 @@ void copy_ListDouble(ListDouble *_list_dst, const ListDouble *_list_src)
     memcpy(_list_dst->ptr, _list_src->ptr, _list_src->capacity);
     return;
 }
-double get_ListDouble(ListDouble *_list, long _idx)
+double get_ListDouble(const ListDouble *_list, long _idx)
 {
     if (_list == NULL)
     {
@@ -475,6 +492,23 @@ void set_ListDouble(ListDouble *_list, double _element, long _idx)
     }
     _list->ptr[_idx] = _element;
     return;
+}
+long indexOf_ListDouble(const ListDouble *_list, double _element)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"indexOf_ListDouble(const ListDouble *_list, double _element)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    long i;
+    for (i = 0; i < _list->size; i++)
+    {
+        if (_list->ptr[i] == _element)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 void add_ListDouble(ListDouble *_list, double _element, long _idx)
 {
@@ -565,7 +599,7 @@ void push_ListDouble(ListDouble *_list, double _element)
     _list->size++;
     return;
 }
-double peek_ListDouble(ListDouble *_list)
+double peek_ListDouble(const ListDouble *_list)
 {
     if (_list == NULL)
     {
