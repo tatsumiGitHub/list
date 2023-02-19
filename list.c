@@ -16,16 +16,16 @@ void init_ListInt(ListInt *_list)
     }
     return;
 }
-void asList_ListInt(ListInt *_list, const int *_array, unsigned long _size)
+void asList_ListInt(ListInt *_list, const int *_array, long _size)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"asListInt(ListInt *_list, int *_array, unsigned long _size)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"asListInt(ListInt *_list, int *_array, long _size)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_array == NULL)
     {
-        printf("Error: Cannot invoke \"asListInt(ListInt *_list, int *_array, unsigned long _size)\" because \"<local2>\" is null\n");
+        printf("Error: Cannot invoke \"asListInt(ListInt *_list, int *_array, long _size)\" because \"<local2>\" is null\n");
         exit(EX_USAGE);
     }
     _list->size = _size;
@@ -73,45 +73,45 @@ void copy_ListInt(ListInt *_list_dst, const ListInt *_list_src)
     memcpy(_list_dst->ptr, _list_src->ptr, _list_src->capacity);
     return;
 }
-int get_ListInt(ListInt *_list, unsigned long _idx)
+int get_ListInt(ListInt *_list, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"getListInt(ListInt *_list, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size < _idx)
+    if (_idx < 0 || _list->size < _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     return _list->ptr[_idx];
 }
-void set_ListInt(ListInt *_list, int _element, unsigned long _idx)
+void set_ListInt(ListInt *_list, int _element, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"setListInt(ListInt *_list, int _element, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size <= _idx)
+    if (_idx < 0 || _list->size <= _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     _list->ptr[_idx] = _element;
     return;
 }
-void add_ListInt(ListInt *_list, int _element, unsigned long _idx)
+void add_ListInt(ListInt *_list, int _element, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"addListInt(ListInt *_list, int _element, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size < _idx)
+    if (_idx < 0 || _list->size < _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     if (_list->capacity <= _list->size * sizeof(int))
@@ -134,16 +134,16 @@ void add_ListInt(ListInt *_list, int _element, unsigned long _idx)
     _list->size++;
     return;
 }
-void remove_ListInt(ListInt *_list, unsigned long _idx)
+void remove_ListInt(ListInt *_list, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"removeListInt(ListInt *_list, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size < _idx)
+    if (_idx < 0 || _list->size < _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     memmove(_list->ptr + _idx, _list->ptr + _idx + 1, (_list->size - _idx) * sizeof(int));
@@ -234,11 +234,11 @@ int pop_ListInt(ListInt *_list)
     }
     return element;
 }
-void qsort_ListInt(ListInt *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)
+void qsort_ListInt(ListInt *_list, long _left, long _right, int SORT_OPTION)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"qsortListInt(ListInt *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"qsortListInt(ListInt *_list, long _left, long _right, int SORT_OPTION)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     int i, j, left, right;
@@ -360,7 +360,7 @@ void toArray_ListInt(int *_array, const ListInt *_list)
 void show_ListInt(ListInt *_list)
 {
     int i;
-    printf("size: %zu\n", _list->size);
+    printf("size: %ld\n", _list->size);
     printf("[");
     for (i = 0; i < _list->size; i++)
     {
@@ -390,16 +390,16 @@ void init_ListDouble(ListDouble *_list)
     }
     return;
 }
-void asList_ListDouble(ListDouble *_list, const double *_array, unsigned long _size)
+void asList_ListDouble(ListDouble *_list, const double *_array, long _size)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"asListDouble(ListDouble *_list, double *_array, unsigned long _size)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"asListDouble(ListDouble *_list, double *_array, long _size)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_array == NULL)
     {
-        printf("Error: Cannot invoke \"asListDouble(ListDouble *_list, double *_array, unsigned long _size)\" because \"<local2>\" is null\n");
+        printf("Error: Cannot invoke \"asListDouble(ListDouble *_list, double *_array, long _size)\" because \"<local2>\" is null\n");
         exit(EX_USAGE);
     }
     _list->size = _size;
@@ -447,45 +447,45 @@ void copy_ListDouble(ListDouble *_list_dst, const ListDouble *_list_src)
     memcpy(_list_dst->ptr, _list_src->ptr, _list_src->capacity);
     return;
 }
-double get_ListDouble(ListDouble *_list, unsigned long _idx)
+double get_ListDouble(ListDouble *_list, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"getListDouble(ListDouble *_list, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size < _idx)
+    if (_idx < 0 || _list->size < _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     return _list->ptr[_idx];
 }
-void set_ListDouble(ListDouble *_list, double _element, unsigned long _idx)
+void set_ListDouble(ListDouble *_list, double _element, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"setListDouble(ListDouble *_list, double _element, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size <= _idx)
+    if (_idx < 0 || _list->size <= _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     _list->ptr[_idx] = _element;
     return;
 }
-void add_ListDouble(ListDouble *_list, double _element, unsigned long _idx)
+void add_ListDouble(ListDouble *_list, double _element, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"addListDouble(ListDouble *_list, double _element, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size < _idx)
+    if (_idx < 0 || _list->size < _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     if (_list->capacity <= _list->size * sizeof(double))
@@ -508,16 +508,16 @@ void add_ListDouble(ListDouble *_list, double _element, unsigned long _idx)
     _list->size++;
     return;
 }
-void remove_ListDouble(ListDouble *_list, unsigned long _idx)
+void remove_ListDouble(ListDouble *_list, long _idx)
 {
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"removeListDouble(ListDouble *_list, int _idx)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
-    if (_list->size < _idx)
+    if (_idx < 0 || _list->size < _idx)
     {
-        printf("Error: Index %zu out of bounds for length %zu\n", _idx, _list->size);
+        printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
     memmove(_list->ptr + _idx, _list->ptr + _idx + 1, (_list->size - _idx) * sizeof(double));
@@ -608,11 +608,11 @@ double pop_ListDouble(ListDouble *_list)
     }
     return element;
 }
-void qsort_ListDouble(ListDouble *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)
+void qsort_ListDouble(ListDouble *_list, long _left, long _right, int SORT_OPTION)
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"qsortListDouble(ListDouble *_list, unsigned long _left, unsigned long _right, int SORT_OPTION)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"qsortListDouble(ListDouble *_list, long _left, long _right, int SORT_OPTION)\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     int i, j, left, right;
@@ -734,7 +734,7 @@ void toArray_ListDouble(double *_array, const ListDouble *_list)
 void show_ListDouble(ListDouble *_list)
 {
     int i;
-    printf("size: %zu\n", _list->size);
+    printf("size: %ld\n", _list->size);
     printf("[");
     for (i = 0; i < _list->size; i++)
     {

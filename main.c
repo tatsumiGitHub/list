@@ -2,14 +2,124 @@
 
 #include "list.h"
 
+void testListInt(void);
+void testListDouble(void);
 void testSort(void);
 
 int main(void)
 {
+    testListInt();
+    testListDouble();
     testSort();
     return 0;
 }
 
+void testListInt(void)
+{
+    srand((unsigned int)time(NULL));
+    int i;
+    long num = 100;
+    ListInt list;
+    init_ListInt(&list);
+    int *array;
+    if ((array = (int *)malloc(num * sizeof(int))) == NULL)
+    {
+        return;
+    }
+    for (i = 0; i < num; i++)
+    {
+        array[i] = rand() % 100;
+    }
+    printf("asList_ListInt\n");
+    asList_ListInt(&list, array, num);
+    show_ListInt(&list);
+
+    printf("\nqsort_ListInt\n");
+    qsort_ListInt(&list, 0, list.size - 1, ACS_SORT);
+    show_ListInt(&list);
+    free_ListInt(&list);
+
+    init_ListInt(&list);
+    printf("\npush_ListInt\n");
+    for (i = 0; i < num; i++)
+    {
+        push_ListInt(&list, i);
+    }
+    show_ListInt(&list);
+
+    printf("\nadd_ListInt\n");
+    add_ListInt(&list, 1024, 10);
+    show_ListInt(&list);
+
+    printf("\nremove_ListInt\n");
+    remove_ListInt(&list, 10);
+    show_ListInt(&list);
+
+    printf("\nset_ListInt\n");
+    set_ListInt(&list, 2048, 10);
+    show_ListInt(&list);
+
+    printf("\nget_ListInt(50) = %d\n", get_ListInt(&list, 50));
+    printf("\npeek_ListInt() = %d\n", peek_ListInt(&list));
+    show_ListInt(&list);
+    printf("\npop_ListInt() = %d\n", pop_ListInt(&list));
+    show_ListInt(&list);
+
+    free_ListInt(&list);
+}
+void testListDouble(void)
+{
+    srand((unsigned int)time(NULL));
+    int i;
+    long num = 100;
+    ListDouble list;
+    init_ListDouble(&list);
+    double *array;
+    if ((array = (double *)malloc(num * sizeof(double))) == NULL)
+    {
+        return;
+    }
+    for (i = 0; i < num; i++)
+    {
+        array[i] = rand() % 10000 * 0.01;
+    }
+    printf("asList_ListDouble\n");
+    asList_ListDouble(&list, array, num);
+    show_ListDouble(&list);
+
+    printf("\nqsort_ListDouble\n");
+    qsort_ListDouble(&list, 0, list.size - 1, ACS_SORT);
+    show_ListDouble(&list);
+    free_ListDouble(&list);
+
+    init_ListDouble(&list);
+    printf("\npush_ListDouble\n");
+    for (i = 0; i < num; i++)
+    {
+        push_ListDouble(&list, i * 0.1);
+    }
+    show_ListDouble(&list);
+
+    printf("\nadd_ListDouble\n");
+    add_ListDouble(&list, 1024.2028, 10);
+    show_ListDouble(&list);
+
+    printf("\nremove_ListDouble\n");
+    remove_ListDouble(&list, 10);
+    show_ListDouble(&list);
+
+    printf("\nset_ListDouble\n");
+    set_ListDouble(&list, 2048.1024, 10);
+    show_ListDouble(&list);
+
+    printf("\nget_ListDouble(50) = %f\n", get_ListDouble(&list, 50));
+    printf("\npeek_ListDouble() = %f\n", peek_ListDouble(&list));
+    show_ListDouble(&list);
+    printf("\npop_ListDouble() = %f\n", pop_ListDouble(&list));
+    show_ListDouble(&list);
+
+    free_ListDouble(&list);
+}
 int cmp_int(const void *_x, const void *_y)
 {
     if (*(int *)_y < *(int *)_x)
