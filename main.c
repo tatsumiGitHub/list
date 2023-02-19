@@ -1,7 +1,4 @@
 #include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include <unistd.h>
 
 #include "list.h"
@@ -12,7 +9,7 @@ void debugTime(void);
 int main(void)
 {
     debugSort();
-    //debugTime();
+    // debugTime();
     return 0;
 }
 
@@ -25,10 +22,10 @@ void debugSort(void)
     initListInt(&list_int);
     for (i = 0; i < 100000; i++)
     {
-        pushListInt(&list_int, rand() % 1000000);
+        pushListInt(&list_int, rand());
     }
     cpu_time1 = clock();
-    qsortListInt(&list_int, ACS_SORT);
+    qsortListInt(&list_int, 0, list_int.size - 1, ACS_SORT);
     cpu_time2 = clock();
     freeListInt(&list_int);
     printf("<sort ListInt>\n");
@@ -40,11 +37,11 @@ void debugSort(void)
         pushListDouble(&list_double, rand() * 0.000001);
     }
     cpu_time1 = clock();
-    qsortListDouble(&list_double, ACS_SORT);
+    qsortListDouble(&list_double, 0, list_double.size - 1, ACS_SORT);
     cpu_time2 = clock();
-    printf("<sort ListInt>\n");
-    printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     freeListDouble(&list_double);
+    printf("<sort ListDouble>\n");
+    printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     return;
 }
 
@@ -60,11 +57,11 @@ void debugTime(void)
         initListInt(&list_int);
         for (j = 0; j < 10000; j++)
         {
-            addListInt(&list_int, j, LIST_END);
+            pushListInt(&list_int, j);
         }
         for (j = 0; j < 10000; j++)
         {
-            removeListInt(&list_int, LIST_END);
+            popListInt(&list_int);
         }
         freeListInt(&list_int);
     }
@@ -76,11 +73,11 @@ void debugTime(void)
         initListDouble(&list_double);
         for (j = 0; j < 10000; j++)
         {
-            addListDouble(&list_double, j, LIST_END);
+            pushListDouble(&list_double, j);
         }
         for (j = 0; j < 10000; j++)
         {
-            removeListDouble(&list_double, LIST_END);
+            popListDouble(&list_double);
         }
         freeListDouble(&list_double);
     }
