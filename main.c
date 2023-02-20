@@ -4,13 +4,15 @@
 
 void testListInt(void);
 void testListDouble(void);
+void testListString(void);
 void testSort(void);
 
 int main(void)
 {
-    testListInt();
-    testListDouble();
-    testSort();
+    //testListInt();
+    //testListDouble();
+    testListString();
+    //testSort();
     return 0;
 }
 
@@ -124,6 +126,14 @@ void testListDouble(void)
 
     free_ListDouble(&list);
 }
+void testListString(void)
+{
+    ListString list;
+    inputFile_ListString(&list, "VDRJ_Ver1_1_Research_Top60894.txt");
+    qsort_ListString(&list, 0, list.size - 1, ACS_SORT);
+    show_ListString(&list);
+    free_ListString(&list);
+}
 int cmp_int(const void *_x, const void *_y)
 {
     if (*(int *)_y < *(int *)_x)
@@ -158,8 +168,7 @@ void testSortArray(void)
 {
     srand((unsigned int)time(NULL));
     int i;
-    long cpu_time1, cpu_time2;
-    size_t num = 100000;
+    long cpu_time1, cpu_time2, num = 50000;
     int *array_int;
     if ((array_int = (int *)malloc(num * sizeof(int))) == NULL)
     {
@@ -196,10 +205,10 @@ void testSortList(void)
 {
     srand((unsigned int)time(NULL));
     int i;
-    long cpu_time1, cpu_time2;
+    long cpu_time1, cpu_time2, num = 50000;
     ListInt list_int;
     init_ListInt(&list_int);
-    for (i = 0; i < 100000; i++)
+    for (i = 0; i < num; i++)
     {
         push_ListInt(&list_int, rand());
     }
@@ -211,7 +220,7 @@ void testSortList(void)
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     ListDouble list_double;
     init_ListDouble(&list_double);
-    for (i = 0; i < 100000; i++)
+    for (i = 0; i < num; i++)
     {
         push_ListDouble(&list_double, rand() * 0.000001);
     }
@@ -220,6 +229,15 @@ void testSortList(void)
     cpu_time2 = clock();
     free_ListDouble(&list_double);
     printf("<sort ListDouble>\n");
+    printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
+    ListString list_string;
+    init_ListString(&list_string);
+    inputFile_ListString(&list_string, "VDRJ_Ver1_1_Research_Top60894.txt");
+    cpu_time1 = clock();
+    qsort_ListString(&list_string, 0, list_string.size - 1, ACS_SORT);
+    cpu_time2 = clock();
+    free_ListString(&list_string);
+    printf("<sort ListString>\n");
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     return;
 }

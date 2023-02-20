@@ -21,6 +21,13 @@ typedef struct
     double *ptr;
 } ListDouble;
 
+typedef struct
+{
+    long size;
+    long capacity;
+    char **ptr;
+} ListString;
+
 void init_ListInt(ListInt *_list);
 void asList_ListInt(ListInt *_list, const int *_array, long _size);
 void free_ListInt(ListInt *_list);
@@ -52,3 +59,19 @@ double pop_ListDouble(ListDouble *_list);
 void qsort_ListDouble(ListDouble *_list, long _left, long _right, int SORT_OPTION);
 void toArray_ListDouble(double *_array, const ListDouble *_list);
 void show_ListDouble(ListDouble *_list);
+
+void init_ListString(ListString *_list);
+void asList_ListString(ListString *_list, char **_string_array, long _size);
+void free_ListString(ListString *_list);
+void copy_ListString(ListString *_list_dst, const ListString *_list_src);
+void inputFile_ListString(ListString *_list, const char *_file_name);
+char *get_ListString(const ListString *_list, long _idx);
+void set_ListString(ListString *_list, char *_string, long _idx);
+long indexOf_ListString(const ListString *_list, const char *_string);
+void add_ListString(ListString *_list, char *_string, long _idx);
+void remove_ListString(ListString *_list, long _idx);
+void push_ListString(ListString *_list, char *_string);
+char *peek_ListString(const ListString *_list);
+char *pop_ListString(ListString *_list);
+void qsort_ListString(ListString *_list, long _left, long _right, int SORT_OPTION);
+void show_ListString(ListString *_list);
