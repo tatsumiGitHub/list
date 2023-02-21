@@ -9,10 +9,10 @@ void testSort(void);
 
 int main(void)
 {
-    //testListInt();
-    //testListDouble();
-    testListString();
-    //testSort();
+    // testListInt();
+    // testListDouble();
+    // testListString();
+    testSort();
     return 0;
 }
 
@@ -129,10 +129,41 @@ void testListDouble(void)
 void testListString(void)
 {
     ListString list;
-    inputFile_ListString(&list, "VDRJ_Ver1_1_Research_Top60894.txt");
-    qsort_ListString(&list, 0, list.size - 1, ACS_SORT);
-    show_ListString(&list);
-    free_ListString(&list);
+    {
+        inputFile_ListString(&list, "VDRJ_Ver1_1_Research_Top60894.txt", NULL, LINE_SPLIT_TRUE);
+
+        printf("\nget_ListString(0) = %s\n", get_ListString(&list, 0));
+        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
+
+        printf("\nset_ListString(0, \"東京都　２３区\")\n");
+        set_ListString(&list, "東京都　２３区", 0);
+        printf("get_ListString(0) = %s\n", get_ListString(&list, 0));
+        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
+
+        printf("\nremove_ListString(0)\n");
+        remove_ListString(&list, 0);
+        printf("get_ListString(0) = %s\n", get_ListString(&list, 0));
+        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
+
+        printf("\npush_ListString(\"大阪府　大阪市\")\n");
+        push_ListString(&list, "大阪府　大阪市");
+        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
+
+        printf("\npeek_ListString() = %s\n", peek_ListString(&list));
+        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
+
+        printf("\npop_ListString() = %s\n", pop_ListString(&list));
+        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
+
+        qsort_ListString(&list, 0, list.size - 1, ACS_SORT);
+
+        free_ListString(&list);
+    }
+
+    {
+        inputFile_ListString(&list, "paper.txt", NULL, LINE_SPLIT_TRUE);
+        free_ListString(&list);
+    }
 }
 int cmp_int(const void *_x, const void *_y)
 {
@@ -232,7 +263,7 @@ void testSortList(void)
     printf("  cpu time: %ld\n", (cpu_time2 - cpu_time1));
     ListString list_string;
     init_ListString(&list_string);
-    inputFile_ListString(&list_string, "VDRJ_Ver1_1_Research_Top60894.txt");
+    inputFile_ListString(&list_string, "VDRJ_Ver1_1_Research_Top60894.txt", NULL, LINE_SPLIT_TRUE);
     cpu_time1 = clock();
     qsort_ListString(&list_string, 0, list_string.size - 1, ACS_SORT);
     cpu_time2 = clock();

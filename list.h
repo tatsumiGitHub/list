@@ -6,6 +6,8 @@
 #define LIST_BUF 64
 #define ACS_SORT 0
 #define DECS_SORT 1
+#define LINE_SPLIT_TRUE 1
+#define LINE_SPLIT_FALSE 0
 
 typedef struct
 {
@@ -25,6 +27,7 @@ typedef struct
 {
     long size;
     long capacity;
+    unsigned long allocated;
     char **ptr;
 } ListString;
 
@@ -61,16 +64,16 @@ void toArray_ListDouble(double *_array, const ListDouble *_list);
 void show_ListDouble(ListDouble *_list);
 
 void init_ListString(ListString *_list);
-void asList_ListString(ListString *_list, char **_string_array, long _size);
+void asList_ListString(ListString *_list, const char **_string_array, long _size);
 void free_ListString(ListString *_list);
 void copy_ListString(ListString *_list_dst, const ListString *_list_src);
-void inputFile_ListString(ListString *_list, const char *_file_name);
+void inputFile_ListString(ListString *_list, const char *_file_name, const char *_token, const unsigned _LINE_SPLIT);
 char *get_ListString(const ListString *_list, long _idx);
-void set_ListString(ListString *_list, char *_string, long _idx);
+void set_ListString(ListString *_list, const char *_string, long _idx);
 long indexOf_ListString(const ListString *_list, const char *_string);
-void add_ListString(ListString *_list, char *_string, long _idx);
+void add_ListString(ListString *_list, const char *_string, long _idx);
 void remove_ListString(ListString *_list, long _idx);
-void push_ListString(ListString *_list, char *_string);
+void push_ListString(ListString *_list, const char *_string);
 char *peek_ListString(const ListString *_list);
 char *pop_ListString(ListString *_list);
 void qsort_ListString(ListString *_list, long _left, long _right, int SORT_OPTION);

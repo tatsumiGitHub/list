@@ -791,6 +791,7 @@ void init_ListString(ListString *_list)
     }
     _list->size = 0;
     _list->capacity = LIST_BUF;
+    _list->allocated = 0;
     if ((_list->ptr = (char **)malloc(LIST_BUF)) == NULL)
     {
         printf("Error: unable to allocate new heap space\n");
@@ -798,7 +799,7 @@ void init_ListString(ListString *_list)
     }
     return;
 }
-void asList_ListString(ListString *_list, char **_string_array, long _size)
+void asList_ListString(ListString *_list, const char **_string_array, long _size)
 {
     if (_list == NULL)
     {
@@ -812,6 +813,7 @@ void asList_ListString(ListString *_list, char **_string_array, long _size)
     }
     _list->size = _size;
     _list->capacity = (_size / LIST_BUF + 1) * LIST_BUF * sizeof(char *);
+    _list->allocated = 0;
     if ((_list->ptr = (char **)malloc(_list->capacity)) == NULL)
     {
         printf("Error: unable to allocate new heap space\n");
@@ -825,6 +827,7 @@ void asList_ListString(ListString *_list, char **_string_array, long _size)
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
         }
+        _list->allocated += strlen(_string_array[i]) + 1;
         strcpy(_list->ptr[i], _string_array[i]);
     }
     return;
@@ -843,6 +846,7 @@ void free_ListString(ListString *_list)
     }
     _list->size = 0;
     _list->capacity = 0;
+    _list->allocated = 0;
     free(_list->ptr);
     _list->ptr = NULL;
     return;
@@ -861,6 +865,7 @@ void copy_ListString(ListString *_list_dst, const ListString *_list_src)
     }
     _list_dst->size = _list_src->size;
     _list_dst->capacity = _list_src->capacity;
+    _list_dst->allocated = _list_src->allocated;
     if ((_list_dst->ptr = (char **)malloc(_list_dst->capacity)) == NULL)
     {
         printf("Error: unable to allocate new heap space\n");
@@ -894,7 +899,7 @@ char *get_ListString(const ListString *_list, long _idx)
     strcpy(string_ptr, _list->ptr[_idx]);
     return string_ptr;
 }
-void set_ListString(ListString *_list, char *_string, long _idx)
+void set_ListString(ListString *_list, const char *_string, long _idx)
 {
     if (_list == NULL)
     {
@@ -911,6 +916,7 @@ void set_ListString(ListString *_list, char *_string, long _idx)
         printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
+    _list->allocated -= strlen(_list->ptr[_idx]);
     char *tmp;
     if ((tmp = (char *)realloc(_list->ptr[_idx], (strlen(_string) + 1) * sizeof(char))) == NULL)
     {
@@ -922,6 +928,7 @@ void set_ListString(ListString *_list, char *_string, long _idx)
     {
         _list->ptr[_idx] = tmp;
     }
+    _list->allocated += strlen(_string);
     strcpy(_list->ptr[_idx], _string);
     _list->ptr[_idx][strlen(_string)] = '\0';
     return;
@@ -948,7 +955,7 @@ long indexOf_ListString(const ListString *_list, const char *_string)
     }
     return -1;
 }
-void inputFile_ListString(ListString *_list, const char *_file_name)
+void inputFile_ListString(ListString *_list, const char *_file_name, const char *_token, const unsigned _LINE_SPLIT)
 {
     if (_list == NULL)
     {
@@ -967,77 +974,94 @@ void inputFile_ListString(ListString *_list, const char *_file_name)
         printf("Error: %s (No such file or directory)\n", _file_name);
         exit(EX_NOINPUT);
     }
-    char *buf;
-    if ((buf = (char *)calloc(buf_size, sizeof(char))) == NULL)
+    char buf[buf_size];
+    char *tmp, *line, *string_tmp;
+    unsigned line_size = buf_size;
+    if ((line = (char *)calloc(buf_size + 1, sizeof(char))) == NULL)
     {
         printf("Error: unable to allocate new heap space\n");
         exit(EX_OSERR);
     }
     _list->size = 0;
     _list->capacity = LIST_BUF;
+    _list->allocated = 0;
     if ((_list->ptr = (char **)malloc(_list->capacity)) == NULL)
     {
         printf("Error: unable to allocate new heap space\n");
         exit(EX_OSERR);
     }
-    int next = 1;
+    int next_line = 1;
     while (fgets(buf, buf_size, fp) != NULL)
     {
-        if (next == 1)
+        if (next_line == 1)
         {
-            if (_list->capacity <= _list->size * sizeof(char *))
+            strcpy(line, buf);
+        }
+        else
+        {
+            if (line_size < strlen(line) + buf_size)
             {
-                char **tmp;
-                _list->capacity += LIST_BUF;
-                if ((tmp = (char **)realloc(_list->ptr, _list->capacity)) == NULL)
+                line_size += buf_size;
+                if ((string_tmp = (char *)realloc(line, line_size * sizeof(char))) == NULL)
                 {
-                    free(_list->ptr);
+                    free(string_tmp);
                     printf("Error: unable to allocate new heap space\n");
                     exit(EX_OSERR);
                 }
                 else
                 {
-                    _list->ptr = tmp;
+                    line = string_tmp;
                 }
             }
-            if ((_list->ptr[_list->size] = (char *)calloc((strlen(buf) + 1), sizeof(char))) == NULL)
-            {
-                printf("Error: unable to allocate new heap space\n");
-                exit(EX_OSERR);
-            }
-            strcpy(_list->ptr[_list->size], buf);
-            _list->size++;
+            strcat(line, buf);
         }
-        else
+        if (line[strlen(line) - 1] == '\n')
         {
-            char *string_tmp;
-            if ((string_tmp = (char *)realloc(_list->ptr[_list->size - 1], (strlen(_list->ptr[_list->size - 1]) + strlen(buf) + 1) * sizeof(char))) == NULL)
+            if (_token == NULL)
             {
-                free(string_tmp);
-                printf("Error: unable to allocate new heap space\n");
-                exit(EX_OSERR);
+                line[strlen(line) - 1] = '\0';
+                push_ListString(_list, line);
+                next_line = 1;
             }
             else
             {
-                _list->ptr[_list->size - 1] = string_tmp;
+                tmp = line;
+                while ((string_tmp = strstr(tmp, _token)) != NULL)
+                {
+                    *(string_tmp) = '\0';
+                    push_ListString(_list, tmp);
+                    tmp = string_tmp + strlen(_token);
+                }
+                next_line = 1;
+                if (_LINE_SPLIT == LINE_SPLIT_FALSE)
+                {
+                    strcpy(line, tmp);
+                    next_line = 0;
+                }
+                else
+                {
+                    tmp[strlen(tmp) - 1] = '\0';
+                    push_ListString(_list, tmp);
+                }
             }
-            strcat(_list->ptr[_list->size - 1], buf);
-        }
-        if (buf[strlen(buf) - 1] == '\n')
-        {
-            _list->ptr[_list->size - 1][strlen(_list->ptr[_list->size - 1]) - 1] = '\0';
-            next = 1;
         }
         else
         {
-            next = 0;
+            next_line = 0;
         }
     }
-    _list->ptr[_list->size - 1][strlen(_list->ptr[_list->size - 1])] = '\0';
-    free(buf);
+    if (next_line == 0)
+    {
+        push_ListString(_list, line);
+    }
+    if (_token != NULL)
+    {
+        _list->ptr[_list->size - 1][strlen(_list->ptr[_list->size - 1]) - strlen(_token)] = '\0';
+    }
+    free(line);
     fclose(fp);
 }
-void add_ListString(ListString *_list, char *_string, long _idx)
+void add_ListString(ListString *_list, const char *_string, long _idx)
 {
     if (_list == NULL)
     {
@@ -1075,6 +1099,7 @@ void add_ListString(ListString *_list, char *_string, long _idx)
         printf("Error: unable to allocate new heap space\n");
         exit(EX_OSERR);
     }
+    _list->allocated += strlen(_string) + 1;
     strcpy(_list->ptr[_idx], _string);
     _list->size++;
     return;
@@ -1091,6 +1116,7 @@ void remove_ListString(ListString *_list, long _idx)
         printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
+    _list->allocated -= strlen(_list->ptr[_idx]) + 1;
     free(_list->ptr[_idx]);
     memmove(_list->ptr + _idx, _list->ptr + _idx + 1, (_list->size - _idx) * sizeof(char *));
     _list->size--;
@@ -1111,7 +1137,7 @@ void remove_ListString(ListString *_list, long _idx)
     }
     return;
 }
-void push_ListString(ListString *_list, char *_string)
+void push_ListString(ListString *_list, const char *_string)
 {
     if (_list == NULL)
     {
@@ -1143,6 +1169,7 @@ void push_ListString(ListString *_list, char *_string)
         printf("Error: unable to allocate new heap space\n");
         exit(EX_OSERR);
     }
+    _list->allocated += strlen(_string) + 1;
     strcpy(_list->ptr[_list->size], _string);
     _list->size++;
     return;
@@ -1176,6 +1203,7 @@ char *pop_ListString(ListString *_list)
     _list->size--;
     char *string_ptr = (char *)calloc(strlen(_list->ptr[_list->size]) + 1, sizeof(char));
     strcpy(string_ptr, _list->ptr[_list->size]);
+    _list->allocated -= strlen(_list->ptr[_list->size]) + 1;
     free(_list->ptr[_list->size]);
     if (LIST_BUF < _list->capacity && _list->size * sizeof(char *) + LIST_BUF < _list->capacity)
     {
@@ -1361,6 +1389,7 @@ void show_ListString(ListString *_list)
 {
     long i;
     printf("size: %ld\n", _list->size);
+    printf("allocated: %zu\n", _list->allocated);
     printf("[\n");
     for (i = 0; i < _list->size; i++)
     {
