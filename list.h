@@ -51,6 +51,9 @@ void *get_List(const List *_list, const long _idx);
 void set_List(List *_list, const void *_element, const long _idx);
 void add_List(List *_list, const void *_elements, const long _idx);
 void remove_List(List *_list, const long _idx);
+void push_List(List *_list, const void *_elements);
+void *peek_List(const List *_list);
+void *pop_List(List *_list);
 
 void init_ListInt(ListInt *_list);
 void asList_ListInt(ListInt *_list, const int *_array, long _size);

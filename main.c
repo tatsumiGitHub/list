@@ -19,40 +19,20 @@ int main(void)
 
 void testListInt(void)
 {
-    srand((unsigned int)time(NULL));
-    int i;
+    int tmp, i;
     int num = 8;
-    List list, list_copy;
-    int *array;
-    if ((array = (int *)malloc(num * sizeof(int))) == NULL)
-    {
-        return;
-    }
+    List list;
+    init_List(&list, sizeof(int), false);
     for (i = 0; i < num; i++)
     {
-        array[i] = i;
+        push_List(&list, &i);
     }
-    asList_List(&list, array, num, sizeof(int), false);
-    copy_List(&list_copy, &list);
-    int tmp = *(int *)get_List(&list, num / 2);
-    printf("get_List(%d) = %d\n", num / 2, tmp);
-    tmp = 1024;
-    set_List(&list, &tmp, num / 2);
-    tmp = *(int *)get_List(&list, num / 2);
-    printf("get_List(%d) = %d\n", num / 2, tmp);
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        tmp = *(int *)get_List(&list, i);
-        printf("%d", tmp);
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
     tmp = 16;
+    set_List(&list, &tmp, 3);
+    tmp = 1024;
     add_List(&list, &tmp, 4);
+    remove_List(&list, 1);
+    printf("pop_List() = %d\n", *(int *)pop_List(&list));
     printf("[");
     for (i = 0; i < list.size; i++)
     {
@@ -64,58 +44,27 @@ void testListInt(void)
         }
     }
     printf("]\n");
-    remove_List(&list, 3);
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        tmp = *(int *)get_List(&list, i);
-        printf("%d", tmp);
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
-    free(array);
+    printf("peek_List() = %d\n", *(int *)peek_List(&list));
     free_List(&list);
-    free_List(&list_copy);
 }
 void testListDouble(void)
 {
-    srand((unsigned int)time(NULL));
     int i;
     int num = 8;
-    List list, list_copy;
-    double *array;
-    if ((array = (double *)malloc(num * sizeof(double))) == NULL)
-    {
-        return;
-    }
+    double tmp;
+    List list;
+    init_List(&list, sizeof(double), false);
     for (i = 0; i < num; i++)
     {
-        array[i] = i * 0.1;
+        tmp = i * 0.1;
+        push_List(&list, &tmp);
     }
-    asList_List(&list, array, num, sizeof(double), false);
-    copy_List(&list_copy, &list);
-    double tmp = *(double *)get_List(&list, num / 2);
-    printf("get_List(%d) = %f\n", num / 2, tmp);
     tmp = 3.14;
-    set_List(&list, &tmp, num / 2);
-    tmp = *(double *)get_List(&list, num / 2);
-    printf("get_List(%d) = %f\n", num / 2, tmp);
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        tmp = *(double *)get_List(&list, i);
-        printf("%f", tmp);
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
+    set_List(&list, &tmp, 3);
     tmp = 2.71;
     add_List(&list, &tmp, 4);
+    remove_List(&list, 1);
+    printf("pop_List() = %f\n", *(double *)pop_List(&list));
     printf("[");
     for (i = 0; i < list.size; i++)
     {
@@ -127,37 +76,26 @@ void testListDouble(void)
         }
     }
     printf("]\n");
-    remove_List(&list, 3);
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        tmp = *(double *)get_List(&list, i);
-        printf("%f", tmp);
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
-    free(array);
+    printf("peek_List() = %f\n", *(double *)peek_List(&list));
     free_List(&list);
-    free_List(&list_copy);
 }
 void testListString(void)
 {
     int i;
-    int num = 128;
+    int num = 8;
+    char *tmp = malloc(16);
     List list;
     init_List(&list, sizeof(char *), true);
     for (i = 0; i < num; i++)
     {
-        add_List(&list, "ab", list.size);
+        strcpy(tmp, "0abc");
+        tmp[0] += i;
+        push_List(&list, tmp);
     }
-    char *tmp = (char *)get_List(&list, num / 2);
-    set_List(&list, "foo", num / 2);
-    add_List(&list, "hoge", num / 2);
-    remove_List(&list, list.size - 1);
-    remove_List(&list, list.size - 1);
+    set_List(&list, "foo", 3);
+    add_List(&list, "bar", 4);
+    remove_List(&list, 1);
+    printf("pop_List() = %s\n", (char *)pop_List(&list));
     printf("[");
     for (i = 0; i < list.size; i++)
     {
@@ -173,6 +111,7 @@ void testListString(void)
         }
     }
     printf("]\n");
+    printf("peek_List() = %s\n", (char *)peek_List(&list));
     free_List(&list);
 }
 int cmp_int(const void *_x, const void *_y)
