@@ -9,10 +9,11 @@ void testSort(void);
 
 int main(void)
 {
-    // testListInt();
-    // testListDouble();
-    // testListString();
-    testSort();
+    testListInt();
+    printf("----------\n");
+    testListDouble();
+    printf("----------\n");
+    testListString();
     return 0;
 }
 
@@ -20,9 +21,8 @@ void testListInt(void)
 {
     srand((unsigned int)time(NULL));
     int i;
-    long num = 100;
-    ListInt list;
-    init_ListInt(&list);
+    int num = 8;
+    List list, list_copy;
     int *array;
     if ((array = (int *)malloc(num * sizeof(int))) == NULL)
     {
@@ -30,54 +30,62 @@ void testListInt(void)
     }
     for (i = 0; i < num; i++)
     {
-        array[i] = rand() % 100;
+        array[i] = i;
     }
-    printf("asList_ListInt\n");
-    asList_ListInt(&list, array, num);
-    show_ListInt(&list);
-
-    printf("\nqsort_ListInt\n");
-    qsort_ListInt(&list, 0, list.size - 1, ACS_SORT);
-    show_ListInt(&list);
-    free_ListInt(&list);
-
-    init_ListInt(&list);
-    printf("\npush_ListInt\n");
-    for (i = 0; i < num; i++)
+    asList_List(&list, array, num, sizeof(int), false);
+    copy_List(&list_copy, &list);
+    int tmp = *(int *)get_List(&list, num / 2);
+    printf("get_List(%d) = %d\n", num / 2, tmp);
+    tmp = 1024;
+    set_List(&list, &tmp, num / 2);
+    tmp = *(int *)get_List(&list, num / 2);
+    printf("get_List(%d) = %d\n", num / 2, tmp);
+    printf("[");
+    for (i = 0; i < list.size; i++)
     {
-        push_ListInt(&list, i);
+        tmp = *(int *)get_List(&list, i);
+        printf("%d", tmp);
+        if (i != list.size - 1)
+        {
+            printf(", ");
+        }
     }
-    show_ListInt(&list);
-
-    printf("\nadd_ListInt\n");
-    add_ListInt(&list, 1024, 10);
-    show_ListInt(&list);
-
-    printf("\nremove_ListInt\n");
-    remove_ListInt(&list, 10);
-    show_ListInt(&list);
-
-    printf("\nset_ListInt\n");
-    set_ListInt(&list, -1, 10);
-    show_ListInt(&list);
-
-    printf("\nindexOf_ListInt(99) = %ld\n", indexOf_ListInt(&list, 99));
-    printf("\nindexOf_ListInt(1024) = %ld\n", indexOf_ListInt(&list, 1024));
-    printf("\nget_ListInt(50) = %d\n", get_ListInt(&list, 50));
-    printf("\npeek_ListInt() = %d\n", peek_ListInt(&list));
-    show_ListInt(&list);
-    printf("\npop_ListInt() = %d\n", pop_ListInt(&list));
-    show_ListInt(&list);
-
-    free_ListInt(&list);
+    printf("]\n");
+    tmp = 16;
+    add_List(&list, &tmp, 4);
+    printf("[");
+    for (i = 0; i < list.size; i++)
+    {
+        tmp = *(int *)get_List(&list, i);
+        printf("%d", tmp);
+        if (i != list.size - 1)
+        {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    remove_List(&list, 3);
+    printf("[");
+    for (i = 0; i < list.size; i++)
+    {
+        tmp = *(int *)get_List(&list, i);
+        printf("%d", tmp);
+        if (i != list.size - 1)
+        {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    free(array);
+    free_List(&list);
+    free_List(&list_copy);
 }
 void testListDouble(void)
 {
     srand((unsigned int)time(NULL));
     int i;
-    long num = 100;
-    ListDouble list;
-    init_ListDouble(&list);
+    int num = 8;
+    List list, list_copy;
     double *array;
     if ((array = (double *)malloc(num * sizeof(double))) == NULL)
     {
@@ -85,85 +93,87 @@ void testListDouble(void)
     }
     for (i = 0; i < num; i++)
     {
-        array[i] = rand() % 10000 * 0.01;
+        array[i] = i * 0.1;
     }
-    printf("asList_ListDouble\n");
-    asList_ListDouble(&list, array, num);
-    show_ListDouble(&list);
-
-    printf("\nqsort_ListDouble\n");
-    qsort_ListDouble(&list, 0, list.size - 1, ACS_SORT);
-    show_ListDouble(&list);
-    free_ListDouble(&list);
-
-    init_ListDouble(&list);
-    printf("\npush_ListDouble\n");
-    for (i = 0; i < num; i++)
+    asList_List(&list, array, num, sizeof(double), false);
+    copy_List(&list_copy, &list);
+    double tmp = *(double *)get_List(&list, num / 2);
+    printf("get_List(%d) = %f\n", num / 2, tmp);
+    tmp = 3.14;
+    set_List(&list, &tmp, num / 2);
+    tmp = *(double *)get_List(&list, num / 2);
+    printf("get_List(%d) = %f\n", num / 2, tmp);
+    printf("[");
+    for (i = 0; i < list.size; i++)
     {
-        push_ListDouble(&list, i * 0.1);
+        tmp = *(double *)get_List(&list, i);
+        printf("%f", tmp);
+        if (i != list.size - 1)
+        {
+            printf(", ");
+        }
     }
-    show_ListDouble(&list);
-
-    printf("\nadd_ListDouble\n");
-    add_ListDouble(&list, 1.024, 10);
-    show_ListDouble(&list);
-
-    printf("\nremove_ListDouble\n");
-    remove_ListDouble(&list, 10);
-    show_ListDouble(&list);
-
-    printf("\nset_ListDouble\n");
-    set_ListDouble(&list, -0.1, 10);
-    show_ListDouble(&list);
-
-    printf("\nindexOf_ListDouble(9.9) = %ld\n", indexOf_ListDouble(&list, 9.9));
-    printf("\nindexOf_ListDouble(1024) = %ld\n", indexOf_ListDouble(&list, 1024));
-    printf("\nget_ListDouble(50) = %f\n", get_ListDouble(&list, 50));
-    printf("\npeek_ListDouble() = %f\n", peek_ListDouble(&list));
-    show_ListDouble(&list);
-    printf("\npop_ListDouble() = %f\n", pop_ListDouble(&list));
-    show_ListDouble(&list);
-
-    free_ListDouble(&list);
+    printf("]\n");
+    tmp = 2.71;
+    add_List(&list, &tmp, 4);
+    printf("[");
+    for (i = 0; i < list.size; i++)
+    {
+        tmp = *(double *)get_List(&list, i);
+        printf("%f", tmp);
+        if (i != list.size - 1)
+        {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    remove_List(&list, 3);
+    printf("[");
+    for (i = 0; i < list.size; i++)
+    {
+        tmp = *(double *)get_List(&list, i);
+        printf("%f", tmp);
+        if (i != list.size - 1)
+        {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    free(array);
+    free_List(&list);
+    free_List(&list_copy);
 }
 void testListString(void)
 {
-    ListString list;
+    int i;
+    int num = 128;
+    List list;
+    init_List(&list, sizeof(char *), true);
+    for (i = 0; i < num; i++)
     {
-        inputFile_ListString(&list, "VDRJ_Ver1_1_Research_Top60894.txt", NULL, LINE_SPLIT_TRUE);
-
-        printf("\nget_ListString(0) = %s\n", get_ListString(&list, 0));
-        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
-
-        printf("\nset_ListString(0, \"東京都　２３区\")\n");
-        set_ListString(&list, "東京都　２３区", 0);
-        printf("get_ListString(0) = %s\n", get_ListString(&list, 0));
-        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
-
-        printf("\nremove_ListString(0)\n");
-        remove_ListString(&list, 0);
-        printf("get_ListString(0) = %s\n", get_ListString(&list, 0));
-        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
-
-        printf("\npush_ListString(\"大阪府　大阪市\")\n");
-        push_ListString(&list, "大阪府　大阪市");
-        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
-
-        printf("\npeek_ListString() = %s\n", peek_ListString(&list));
-        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
-
-        printf("\npop_ListString() = %s\n", pop_ListString(&list));
-        printf("  size: %ld, allocated: %ld\n", list.size, list.allocated);
-
-        qsort_ListString(&list, 0, list.size - 1, ACS_SORT);
-
-        free_ListString(&list);
+        add_List(&list, "ab", list.size);
     }
-
+    char *tmp = (char *)get_List(&list, num / 2);
+    set_List(&list, "foo", num / 2);
+    add_List(&list, "hoge", num / 2);
+    remove_List(&list, list.size - 1);
+    remove_List(&list, list.size - 1);
+    printf("[");
+    for (i = 0; i < list.size; i++)
     {
-        inputFile_ListString(&list, "paper.txt", NULL, LINE_SPLIT_TRUE);
-        free_ListString(&list);
+        tmp = (char *)get_List(&list, i);
+        printf("%s", tmp);
+        if (i != list.size - 1)
+        {
+            printf(", ");
+        }
+        if (i % 16 == 15)
+        {
+            printf("\n");
+        }
     }
+    printf("]\n");
+    free_List(&list);
 }
 int cmp_int(const void *_x, const void *_y)
 {
