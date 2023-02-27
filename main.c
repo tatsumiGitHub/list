@@ -80,6 +80,9 @@ void testListInt(void)
         }
     }
     printf("]\n");
+    printf("----------\n");
+    printf("     size: %ld\n", list.size);
+    printf("allocated: %ld\n", list.allocated);
     free_List(&list);
 }
 void testListDouble(void)
@@ -123,6 +126,9 @@ void testListDouble(void)
         }
     }
     printf("]\n");
+    printf("----------\n");
+    printf("     size: %ld\n", list.size);
+    printf("allocated: %ld\n", list.allocated);
     free_List(&list);
 }
 void testListString(void)
@@ -172,6 +178,9 @@ void testListString(void)
         }
     }
     printf("]\n");
+    printf("----------\n");
+    printf("     size: %ld\n", list.size);
+    printf("allocated: %ld\n", list.allocated);
     free_List(&list);
     inputFile_List(&list, "VDRJ_Ver1_1_Research_Top60894.csv", NULL, LINE_SPLIT_TRUE);
     printf("----------\n");

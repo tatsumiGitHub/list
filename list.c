@@ -80,7 +80,6 @@ void asList_List(List *_list, const void *_array, const long _size, const long _
             exit(EX_OSERR);
         }
         memcpy(_list->base_addr, _array, _size * _data_size);
-        _list->allocated = _list->capacity;
     }
     return;
 }
@@ -278,7 +277,6 @@ void add_List(List *_list, const void *_elements, const long _idx)
     }
     else
     {
-        _list->allocated += _list->data_size;
         memmove((_list->base_addr + _idx * _list->data_size), _elements, _list->data_size);
     }
     _list->size++;
@@ -359,7 +357,6 @@ void push_List(List *_list, const void *_elements)
     }
     else
     {
-        _list->allocated += _list->data_size;
         memmove((_list->base_addr + _list->size * _list->data_size), _elements, _list->data_size);
     }
     _list->size++;
@@ -663,7 +660,6 @@ void inputFile_List(List *_list, const char *_file_name, const char *_token, con
             if (_token == NULL)
             {
                 line[strlen(line) - 1] = '\0';
-                _list->allocated += strlen(line) + 1;
                 push_List(_list, line);
                 next_line = 1;
             }
@@ -685,7 +681,6 @@ void inputFile_List(List *_list, const char *_file_name, const char *_token, con
                 else
                 {
                     tmp[strlen(tmp) - 1] = '\0';
-                    _list->allocated += strlen(tmp) + 1;
                     push_List(_list, tmp);
                 }
             }
