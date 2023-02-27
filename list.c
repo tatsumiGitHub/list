@@ -159,6 +159,7 @@ void copy_List(List *_list_dst, const List *_list_src)
 }
 void *get_List(const List *_list, const long _idx)
 {
+    static void *return_ptr = NULL;
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"get_List(const List *_list, const long _idx)\" because \"<local1>\" is null\n");
@@ -169,20 +170,20 @@ void *get_List(const List *_list, const long _idx)
         printf("Error: Index %ld out of bounds for length %ld\n", _idx, _list->size);
         exit(EX_USAGE);
     }
-    void *return_ptr = NULL;
     if (_list->is_string == true)
     {
         char *str_ptr = *((char **)_list->base_addr + _idx);
-        if ((return_ptr = (char *)calloc((strlen(str_ptr) + 1), sizeof(char))) == NULL)
+        if ((return_ptr = (char *)realloc(return_ptr, (strlen(str_ptr) + 1))) == NULL)
         {
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
         }
         strcpy(return_ptr, str_ptr);
+        *((char *)return_ptr + strlen(return_ptr)) = '\0';
     }
     else
     {
-        if ((return_ptr = calloc(_list->data_size, 0)) == NULL)
+        if ((return_ptr = realloc(return_ptr, _list->data_size)) == NULL)
         {
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
@@ -366,6 +367,7 @@ void push_List(List *_list, const void *_elements)
 }
 void *peek_List(const List *_list)
 {
+    static void *return_ptr = NULL;
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"peek_List(const List *_list)\" because \"<local1>\" is null\n");
@@ -376,11 +378,10 @@ void *peek_List(const List *_list)
         printf("Error: Index 0 out of bounds for length %ld\n", _list->size);
         exit(EX_USAGE);
     }
-    void *return_ptr = NULL;
     if (_list->is_string == true)
     {
         char *str_ptr = *((char **)_list->base_addr + _list->size - 1);
-        if ((return_ptr = (char *)calloc((strlen(str_ptr) + 1), sizeof(char))) == NULL)
+        if ((return_ptr = (char *)realloc(return_ptr, (strlen(str_ptr) + 1))) == NULL)
         {
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
@@ -389,7 +390,7 @@ void *peek_List(const List *_list)
     }
     else
     {
-        if ((return_ptr = calloc(_list->data_size, 0)) == NULL)
+        if ((return_ptr = realloc(return_ptr, _list->data_size)) == NULL)
         {
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
@@ -400,6 +401,7 @@ void *peek_List(const List *_list)
 }
 void *pop_List(List *_list)
 {
+    static void *return_ptr = NULL;
     if (_list == NULL)
     {
         printf("Error: Cannot invoke \"pop_List(List *_list)\" because \"<local1>\" is null\n");
@@ -410,11 +412,10 @@ void *pop_List(List *_list)
         printf("Error: Index 0 out of bounds for length %ld\n", _list->size);
         exit(EX_USAGE);
     }
-    void *return_ptr = NULL;
     if (_list->is_string == true)
     {
         char *str_ptr = *((char **)_list->base_addr + _list->size - 1);
-        if ((return_ptr = (char *)calloc((strlen(str_ptr) + 1), sizeof(char))) == NULL)
+        if ((return_ptr = (char *)realloc(return_ptr, (strlen(str_ptr) + 1))) == NULL)
         {
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
@@ -425,7 +426,7 @@ void *pop_List(List *_list)
     }
     else
     {
-        if ((return_ptr = calloc(_list->data_size, 0)) == NULL)
+        if ((return_ptr = realloc(return_ptr, _list->data_size)) == NULL)
         {
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
