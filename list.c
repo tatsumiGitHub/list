@@ -462,7 +462,7 @@ void qsort_List(List *_list, const long _left, const long _right, int (*_compare
     }
     void *ptr_tmp, *cpy_tmp = NULL;
     void *pivot;
-    long i, j, k, left, right, max_len = -1;
+    long tmp, i, j, left, right, max_len = -1;
     List left_list, right_list;
     init_List(&left_list, sizeof(long), false);
     init_List(&right_list, sizeof(long), false);
@@ -549,15 +549,15 @@ void qsort_List(List *_list, const long _left, const long _right, int (*_compare
         }
         if (j + 1 < right)
         {
-            k = j + 1;
-            push_List(&left_list, &k);
+            tmp = j + 1;
+            push_List(&left_list, &tmp);
             push_List(&right_list, &right);
         }
         if (left < i - 1)
         {
-            k = i - 1;
+            tmp = i - 1;
             push_List(&left_list, &left);
-            push_List(&right_list, &k);
+            push_List(&right_list, &tmp);
         }
     }
 
@@ -696,7 +696,7 @@ void inputFile_List(List *_list, const char *_file_name, const char *_token, con
     }
     if (_token != NULL)
     {
-        *(((char **)_list->base_addr + (_list->size - 1)) + strlen(*((char **)_list->base_addr + (_list->size - 1))) - strlen(_token)) = '\0';
+        *((char *)((char **)_list->base_addr + (_list->size - 1)) + strlen(*((char **)_list->base_addr + (_list->size - 1))) - strlen(_token)) = '\0';
     }
     free(line);
     fclose(fp);

@@ -2,17 +2,11 @@
 
 #include "list.h"
 
-void testListInt(void);
-void testListDouble(void);
-void testListString(void);
+void sort_test(void);
 
 int main(void)
 {
-    testListInt();
-    printf("----------\n");
-    testListDouble();
-    printf("----------\n");
-    testListString();
+    sort_test();
     return 0;
 }
 
@@ -40,152 +34,56 @@ int cmp_str(const void *_str1, const void *_str2)
     return strcmp(*(char **)_str1, *(char **)_str2);
 }
 
-void testListInt(void)
+void sort_test(void)
 {
     srand((unsigned int)time(NULL));
-    int tmp, i;
-    int num = 8;
-    List list;
-    init_List(&list, sizeof(int), false);
-    for (i = 0; i < num; i++)
-    {
-        tmp = (rand() % 100) * (i % 2 == 0 ? 1 : -1);
-        push_List(&list, &tmp);
-    }
-    tmp = 16;
-    set_List(&list, &tmp, 3);
-    tmp = 1024;
-    add_List(&list, &tmp, 4);
-    remove_List(&list, 1);
-    printf("pop_List() = %d\n", *(int *)pop_List(&list));
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        printf("%d", *(int *)get_List(&list, i));
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
-    printf("peek_List() = %d\n", *(int *)peek_List(&list));
-    qsort_List(&list, 0, list.size - 1, cmp_int);
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        printf("%d", *(int *)get_List(&list, i));
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
-    printf("----------\n");
-    printf("     size: %ld\n", list.size);
-    printf("allocated: %ld\n", list.allocated);
-    free_List(&list);
-}
-void testListDouble(void)
-{
-    srand((unsigned int)time(NULL));
+    const int num = 1000000;
     int i;
-    int num = 8;
-    double tmp;
+    unsigned long cpu_time1, cpu_time2;
     List list;
-    init_List(&list, sizeof(double), false);
+    ///----- sort int data -----///
+    printf("----- sort int data -----\n");
+    int *arr_int;
+    if ((arr_int = (int *)malloc(num * sizeof(int))) == NULL)
+    {
+        exit(EX_OSERR);
+    }
     for (i = 0; i < num; i++)
     {
-        tmp = rand() * 0.0000001 * (i % 2 == 0 ? 1 : -1);
-        push_List(&list, &tmp);
+        arr_int[i] = rand();
     }
-    tmp = 3.14;
-    set_List(&list, &tmp, 3);
-    tmp = 2.71;
-    add_List(&list, &tmp, 4);
-    remove_List(&list, 1);
-    printf("pop_List() = %f\n", *(double *)pop_List(&list));
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        printf("%f", *(double *)get_List(&list, i));
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
-    printf("peek_List() = %f\n", *(double *)peek_List(&list));
-    qsort_List(&list, 0, list.size - 1, cmp_double);
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        printf("%f", *(double *)get_List(&list, i));
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-    }
-    printf("]\n");
-    printf("----------\n");
-    printf("     size: %ld\n", list.size);
-    printf("allocated: %ld\n", list.allocated);
+    asList_List(&list, arr_int, num, sizeof(int), false);
+    cpu_time1 = clock();
+    qsort(arr_int, num, sizeof(int), cmp_int);
+    cpu_time2 = clock();
+    printf("time1: %zu\n", cpu_time2 - cpu_time1);
+    cpu_time1 = clock();
+    qsort_List(&list, 0, num, cmp_int);
+    cpu_time2 = clock();
+    printf("time2: %zu\n", cpu_time2 - cpu_time1);
+    free(arr_int);
     free_List(&list);
-}
-void testListString(void)
-{
-    int i;
-    int num = 8;
-    char *tmp = malloc(16);
-    List list;
-    init_List(&list, sizeof(char *), true);
+    ///----- sort double data -----///
+    printf("----- sort double data -----\n");
+    double *arr_double;
+    if ((arr_double = (double *)malloc(num * sizeof(double))) == NULL)
+    {
+        exit(EX_OSERR);
+    }
     for (i = 0; i < num; i++)
     {
-        strcpy(tmp, "0abc");
-        tmp[0] += i;
-        push_List(&list, tmp);
+        arr_double[i] = rand() * 0.000001;
     }
-    set_List(&list, "foo", 3);
-    add_List(&list, "bar", 4);
-    remove_List(&list, 1);
-    printf("pop_List() = %s\n", (char *)pop_List(&list));
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        printf("%s", (char *)get_List(&list, i));
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-        if (i % 16 == 15)
-        {
-            printf("\n");
-        }
-    }
-    printf("]\n");
-    printf("peek_List() = %s\n", (char *)peek_List(&list));
-    qsort_List(&list, 0, list.size - 1, cmp_str);
-    printf("[");
-    for (i = 0; i < list.size; i++)
-    {
-        printf("%s", (char *)get_List(&list, i));
-        if (i != list.size - 1)
-        {
-            printf(", ");
-        }
-        if (i % 16 == 15)
-        {
-            printf("\n");
-        }
-    }
-    printf("]\n");
-    printf("----------\n");
-    printf("     size: %ld\n", list.size);
-    printf("allocated: %ld\n", list.allocated);
+    asList_List(&list, arr_double, num, sizeof(double), false);
+    cpu_time1 = clock();
+    qsort(arr_double, num, sizeof(double), cmp_double);
+    cpu_time2 = clock();
+    printf("time1: %zu\n", cpu_time2 - cpu_time1);
+    cpu_time1 = clock();
+    qsort_List(&list, 0, num, cmp_double);
+    cpu_time2 = clock();
+    printf("time2: %zu\n", cpu_time2 - cpu_time1);
+    free(arr_double);
     free_List(&list);
-    inputFile_List(&list, "VDRJ_Ver1_1_Research_Top60894.csv", NULL, LINE_SPLIT_TRUE);
-    printf("----------\n");
-    printf("file name: VDRJ_Ver1_1_Research_Top60894.csv\n");
-    printf("     size: %ld\n", list.size);
-    printf("allocated: %ld\n", list.allocated);
-    free_List(&list);
+    return;
 }
