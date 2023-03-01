@@ -1,4 +1,5 @@
 #include <time.h>
+#include <sys/time.h>
 
 #include "list.h"
 
@@ -38,8 +39,9 @@ void sort_test(void)
 {
     srand((unsigned int)time(NULL));
     const int num = 1000000;
+    struct timeval _time;
     int i;
-    unsigned long cpu_time1, cpu_time2;
+    double start, end;
     List list;
     ///----- sort int data -----///
     printf("----- sort int data -----\n");
@@ -53,14 +55,18 @@ void sort_test(void)
         arr_int[i] = rand();
     }
     asList_List(&list, arr_int, num, sizeof(int), false);
-    cpu_time1 = clock();
+    gettimeofday(&_time, NULL);
+    start = _time.tv_sec + _time.tv_usec * 0.000001;
     qsort(arr_int, num, sizeof(int), cmp_int);
-    cpu_time2 = clock();
-    printf("time1: %zu\n", cpu_time2 - cpu_time1);
-    cpu_time1 = clock();
+    gettimeofday(&_time, NULL);
+    end = _time.tv_sec + _time.tv_usec * 0.000001;
+    printf("time1: %f\n", end - start);
+    gettimeofday(&_time, NULL);
+    start = _time.tv_sec + _time.tv_usec * 0.000001;
     qsort_List(&list, 0, num, cmp_int);
-    cpu_time2 = clock();
-    printf("time2: %zu\n", cpu_time2 - cpu_time1);
+    gettimeofday(&_time, NULL);
+    end = _time.tv_sec + _time.tv_usec * 0.000001;
+    printf("time2: %f\n", end - start);
     free(arr_int);
     free_List(&list);
     ///----- sort double data -----///
@@ -75,14 +81,18 @@ void sort_test(void)
         arr_double[i] = rand() * 0.000001;
     }
     asList_List(&list, arr_double, num, sizeof(double), false);
-    cpu_time1 = clock();
+    gettimeofday(&_time, NULL);
+    start = _time.tv_sec + _time.tv_usec * 0.000001;
     qsort(arr_double, num, sizeof(double), cmp_double);
-    cpu_time2 = clock();
-    printf("time1: %zu\n", cpu_time2 - cpu_time1);
-    cpu_time1 = clock();
+    gettimeofday(&_time, NULL);
+    end = _time.tv_sec + _time.tv_usec * 0.000001;
+    printf("time1: %f\n", end - start);
+    gettimeofday(&_time, NULL);
+    start = _time.tv_sec + _time.tv_usec * 0.000001;
     qsort_List(&list, 0, num, cmp_double);
-    cpu_time2 = clock();
-    printf("time2: %zu\n", cpu_time2 - cpu_time1);
+    gettimeofday(&_time, NULL);
+    end = _time.tv_sec + _time.tv_usec * 0.000001;
+    printf("time2: %f\n", end - start);
     free(arr_double);
     free_List(&list);
     return;
