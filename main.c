@@ -63,7 +63,7 @@ void sort_test(void)
     printf("time1: %f\n", end - start);
     gettimeofday(&_time, NULL);
     start = _time.tv_sec + _time.tv_usec * 0.000001;
-    qsort_List(&list, 0, num, cmp_int);
+    qsort_List(&list, 0, list.size - 1, cmp_int);
     gettimeofday(&_time, NULL);
     end = _time.tv_sec + _time.tv_usec * 0.000001;
     printf("time2: %f\n", end - start);
@@ -89,11 +89,23 @@ void sort_test(void)
     printf("time1: %f\n", end - start);
     gettimeofday(&_time, NULL);
     start = _time.tv_sec + _time.tv_usec * 0.000001;
-    qsort_List(&list, 0, num, cmp_double);
+    qsort_List(&list, 0, list.size - 1, cmp_double);
     gettimeofday(&_time, NULL);
     end = _time.tv_sec + _time.tv_usec * 0.000001;
     printf("time2: %f\n", end - start);
     free(arr_double);
+    free_List(&list);
+    ///----- sort string data -----///
+    printf("----- sort string data -----\n");
+    inputFile_List(&list, "VDRJ_Ver1_1_Research_Top60894.csv", NULL, true);
+    gettimeofday(&_time, NULL);
+    start = _time.tv_sec + _time.tv_usec * 0.000001;
+    qsort_List(&list, 0, list.size - 1, cmp_str);
+    gettimeofday(&_time, NULL);
+    end = _time.tv_sec + _time.tv_usec * 0.000001;
+    printf("     size: %ld\n", list.size);
+    printf("allocated: %ld\n", list.allocated);
+    printf("     time: %f\n", end - start);
     free_List(&list);
     return;
 }
