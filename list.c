@@ -27,16 +27,16 @@ void init_List(List *_list, const int _data_size, const bool _is_string)
     }
     return;
 }
-void asList_List(List *_list, const void *_array, const long _size, const long _data_size, const int _is_string)
+void asList_List(List *_list, const void *_array, const long _size, const long _data_size, const int _is_string, void (*_copy)(const void *, const void *))
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"asList_List(List *_list, const void *_array, const long _size, const long _data_size, const int _is_string)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"asList_List(List *_list, const void *_array, const long _size, const long _data_size, const int _is_string, void (*_copy)(const void *, const void *))\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_array == NULL)
     {
-        printf("Error: Cannot invoke \"asList_List(List *_list, const void *_array, const long _size, const long _data_size, const int _is_string)\" because \"<local2>\" is null\n");
+        printf("Error: Cannot invoke \"asList_List(List *_list, const void *_array, const long _size, const long _data_size, const int _is_string, void (*_copy)(const void *, const void *))\" because \"<local2>\" is null\n");
         exit(EX_USAGE);
     }
     _list->is_string = _is_string;
@@ -51,25 +51,35 @@ void asList_List(List *_list, const void *_array, const long _size, const long _
     }
     _list->capacity = (_size / LIST_BUF_SIZE + 1) * LIST_BUF_SIZE * _list->data_size;
     _list->allocated = 0;
+    long i;
     if (_list->is_string == true)
     {
-        long i;
         char *str_tmp;
         if ((_list->base_addr = (char **)malloc(_list->capacity)) == NULL)
         {
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
         }
-        for (i = 0; i < _size; i++)
+        if (_copy == NULL)
         {
-            str_tmp = *((char **)_array + i);
-            if ((*((char **)_list->base_addr + i) = (char *)calloc((strlen(str_tmp) + 1), sizeof(char))) == NULL)
+            for (i = 0; i < _size; i++)
             {
-                printf("Error: unable to allocate new heap space\n");
-                exit(EX_OSERR);
+                str_tmp = *((char **)_array + i);
+                if ((*((char **)_list->base_addr + i) = (char *)calloc((strlen(str_tmp) + 1), sizeof(char))) == NULL)
+                {
+                    printf("Error: unable to allocate new heap space\n");
+                    exit(EX_OSERR);
+                }
+                strcpy(*((char **)_list->base_addr + i), str_tmp);
+                _list->allocated += strlen(str_tmp) + 1;
             }
-            strcpy(*((char **)_list->base_addr + i), str_tmp);
-            _list->allocated += strlen(str_tmp) + 1;
+        }
+        else
+        {
+            for (i = 0; i < _list->size; i++)
+            {
+                _copy(*((char **)(_list->base_addr + i)), *((char **)_array + i));
+            }
         }
     }
     else
@@ -79,7 +89,17 @@ void asList_List(List *_list, const void *_array, const long _size, const long _
             printf("Error: unable to allocate new heap space\n");
             exit(EX_OSERR);
         }
-        memcpy(_list->base_addr, _array, _size * _data_size);
+        if (_copy == NULL)
+        {
+            memcpy(_list->base_addr, _array, _size * _data_size);
+        }
+        else
+        {
+            for (i = 0; i < _list->size; i++)
+            {
+                _copy(_list->base_addr + i * _list->data_size, _array + i * _list->data_size);
+            }
+        }
     }
     return;
 }
@@ -107,16 +127,16 @@ void free_List(List *_list)
     _list->base_addr = NULL;
     return;
 }
-void copy_List(List *_list_dst, const List *_list_src)
+void copy_List(List *_list_dst, const List *_list_src, void (*_copy)(const void *, const void *))
 {
     if (_list_dst == NULL)
     {
-        printf("Error: Cannot invoke \"copy_List(List *_list_dst, const List *_list_src)\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"copy_List(List *_list_dst, const List *_list_src, void (*_copy)(const void *, const void *))\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_list_src == NULL)
     {
-        printf("Error: Cannot invoke \"copy_List(List *_list_dst, const List *_list_src)\" because \"<local2>\" is null\n");
+        printf("Error: Cannot invoke \"copy_List(List *_list_dst, const List *_list_src, void (*_copy)(const void *, const void *))\" because \"<local2>\" is null\n");
         exit(EX_USAGE);
     }
     _list_dst->is_string = _list_src->is_string;
@@ -129,9 +149,9 @@ void copy_List(List *_list_dst, const List *_list_src)
         printf("Error: unable to allocate new heap space\n");
         exit(EX_OSERR);
     }
+    long i;
     if (_list_dst->is_string == true)
     {
-        long i;
         char *str_tmp;
         if ((_list_dst->base_addr = (char **)malloc(_list_dst->capacity)) == NULL)
         {
@@ -151,8 +171,18 @@ void copy_List(List *_list_dst, const List *_list_src)
     }
     else
     {
-        memcpy(_list_dst->base_addr, _list_src->base_addr, _list_dst->capacity);
-        _list_dst->allocated = _list_src->allocated;
+        if (_copy == NULL)
+        {
+            memcpy(_list_dst->base_addr, _list_src->base_addr, _list_dst->capacity);
+            _list_dst->allocated = _list_src->allocated;
+        }
+        else
+        {
+            for (i = 0; i < _list_dst->size; i++)
+            {
+                _copy(_list_dst->base_addr + i * _list_src->data_size, _list_src->base_addr + i * _list_src->data_size);
+            }
+        }
     }
     return;
 }
@@ -448,16 +478,16 @@ void *pop_List(List *_list)
     }
     return return_ptr;
 }
-void qsort_List(List *_list, const long _left, const long _right, int (*_compare)(const void *, const void *))
+void qsort_List(List *_list, const long _left, const long _right, int (*_compare)(const void *, const void *), void (*_swap)(const void *, const void *))
 {
     if (_list == NULL)
     {
-        printf("Error: Cannot invoke \"qsort_List(List *_list, const long _left, const long _right, int (*compare)(const void *, const void *))\" because \"<local1>\" is null\n");
+        printf("Error: Cannot invoke \"qsort_List(List *_list, const long _left, const long _right, int (*compare)(const void *, const void *), void (*_swap)(const void *, const void *))\" because \"<local1>\" is null\n");
         exit(EX_USAGE);
     }
     if (_compare == NULL)
     {
-        printf("Error: Cannot invoke \"qsort_List(List *_list, const long _left, const long _right, int (*compare)(const void *, const void *))\" because \"<local4>\" is null\n");
+        printf("Error: Cannot invoke \"qsort_List(List *_list, const long _left, const long _right, int (*compare)(const void *, const void *), void (*_swap)(const void *, const void *))\" because \"<local4>\" is null\n");
         exit(EX_USAGE);
     }
     void *ptr_tmp, *cpy_tmp = NULL;
@@ -516,33 +546,47 @@ void qsort_List(List *_list, const long _left, const long _right, int (*_compare
 
             if (_list->is_string == true)
             {
-                strcpy(cpy_tmp, *((char **)_list->base_addr + i));
-                if ((ptr_tmp = (char *)realloc(*((char **)_list->base_addr + i), (strlen(*((char **)_list->base_addr + j)) + 1) * sizeof(char))) == NULL)
+                if (_swap == NULL)
                 {
-                    printf("Error: unable to allocate new heap space\n");
-                    exit(EX_OSERR);
+                    strcpy(cpy_tmp, *((char **)_list->base_addr + i));
+                    if ((ptr_tmp = (char *)realloc(*((char **)_list->base_addr + i), (strlen(*((char **)_list->base_addr + j)) + 1) * sizeof(char))) == NULL)
+                    {
+                        printf("Error: unable to allocate new heap space\n");
+                        exit(EX_OSERR);
+                    }
+                    else
+                    {
+                        *((char **)_list->base_addr + i) = ptr_tmp;
+                    }
+                    strcpy(*((char **)_list->base_addr + i), *((char **)_list->base_addr + j));
+                    if ((ptr_tmp = (char *)realloc(*((char **)_list->base_addr + j), (strlen(cpy_tmp) + 1) * sizeof(char))) == NULL)
+                    {
+                        printf("Error: unable to allocate new heap space\n");
+                        exit(EX_OSERR);
+                    }
+                    else
+                    {
+                        *((char **)_list->base_addr + j) = ptr_tmp;
+                    }
+                    strcpy(*((char **)_list->base_addr + j), cpy_tmp);
                 }
                 else
                 {
-                    *((char **)_list->base_addr + i) = ptr_tmp;
+                    _swap(*((char **)_list->base_addr + i), *((char **)_list->base_addr + j));
                 }
-                strcpy(*((char **)_list->base_addr + i), *((char **)_list->base_addr + j));
-                if ((ptr_tmp = (char *)realloc(*((char **)_list->base_addr + j), (strlen(cpy_tmp) + 1) * sizeof(char))) == NULL)
-                {
-                    printf("Error: unable to allocate new heap space\n");
-                    exit(EX_OSERR);
-                }
-                else
-                {
-                    *((char **)_list->base_addr + j) = ptr_tmp;
-                }
-                strcpy(*((char **)_list->base_addr + j), cpy_tmp);
             }
             else
             {
-                memcpy(cpy_tmp, _list->base_addr + i * _list->data_size, _list->data_size);
-                memcpy(_list->base_addr + i * _list->data_size, _list->base_addr + j * _list->data_size, _list->data_size);
-                memcpy(_list->base_addr + j * _list->data_size, cpy_tmp, _list->data_size);
+                if (_swap == NULL)
+                {
+                    memcpy(cpy_tmp, _list->base_addr + i * _list->data_size, _list->data_size);
+                    memcpy(_list->base_addr + i * _list->data_size, _list->base_addr + j * _list->data_size, _list->data_size);
+                    memcpy(_list->base_addr + j * _list->data_size, cpy_tmp, _list->data_size);
+                }
+                else
+                {
+                    _swap(_list->base_addr + i * _list->data_size, _list->base_addr + j * _list->data_size);
+                }
             }
             i++;
             j--;
