@@ -25,6 +25,8 @@ libmylist.so:	$(OBJS)
 
 lib:	$(LIBRARY)
 
+docs:; doxygen
+
 gdb:		$(PROGRAM)
 		gdb main
 
