@@ -1,3 +1,9 @@
+/**
+ * @file list.c
+ * @brief 可変長配列を実現するプログラム
+ * @author tatsumi
+ * @date 2024/01/17
+ */
 #include "list.h"
 
 void init_List(List *_list, const int _data_size, const bool _is_string)
@@ -25,6 +31,30 @@ void init_List(List *_list, const int _data_size, const bool _is_string)
         printf("Error: unable to allocate new heap space\n");
         exit(EX_OSERR);
     }
+    return;
+}
+void free_List(List *_list)
+{
+    if (_list == NULL)
+    {
+        printf("Error: Cannot invoke \"free_List(List *_list)\" because \"<local1>\" is null\n");
+        exit(EX_USAGE);
+    }
+    if (_list->is_string == true)
+    {
+        int i;
+        for (i = 0; i < _list->size; i++)
+        {
+            free(*((char **)_list->base_addr + i));
+        }
+    }
+    _list->is_string = false;
+    _list->size = 0;
+    _list->data_size = 0;
+    _list->capacity = 0;
+    _list->allocated = 0;
+    free(_list->base_addr);
+    _list->base_addr = NULL;
     return;
 }
 void asList_List(List *_list, const void *_array, const long _size, const long _data_size, const int _is_string, void (*_copy)(const void *, const void *))
@@ -101,30 +131,6 @@ void asList_List(List *_list, const void *_array, const long _size, const long _
             }
         }
     }
-    return;
-}
-void free_List(List *_list)
-{
-    if (_list == NULL)
-    {
-        printf("Error: Cannot invoke \"free_List(List *_list)\" because \"<local1>\" is null\n");
-        exit(EX_USAGE);
-    }
-    if (_list->is_string == true)
-    {
-        int i;
-        for (i = 0; i < _list->size; i++)
-        {
-            free(*((char **)_list->base_addr + i));
-        }
-    }
-    _list->is_string = false;
-    _list->size = 0;
-    _list->data_size = 0;
-    _list->capacity = 0;
-    _list->allocated = 0;
-    free(_list->base_addr);
-    _list->base_addr = NULL;
     return;
 }
 void copy_List(List *_list_dst, const List *_list_src, void (*_copy)(const void *, const void *))
@@ -493,11 +499,13 @@ void qsort_List(List *_list, const long _left, const long _right, int (*_compare
     void *ptr_tmp, *cpy_tmp = NULL;
     void *pivot;
     long tmp, i, j, left, right, max_len = -1;
+    left = (_left < 0 || _list->size <= _left) ? 0 : _left;
+    right = (_right < 0 || _list->size <= _right) ? _list->size - 1 : _right;
     List left_list, right_list;
     init_List(&left_list, sizeof(long), false);
     init_List(&right_list, sizeof(long), false);
-    push_List(&left_list, &_left);
-    push_List(&right_list, &_right);
+    push_List(&left_list, &left);
+    push_List(&right_list, &right);
 
     if (_list->is_string == true)
     {
@@ -637,7 +645,7 @@ long indexOf_List(const List *_list, const void *_elements, int (*_compare)(cons
     }
     return -1;
 }
-void inputFile_List(List *_list, const char *_file_name, const char *_token, const unsigned _LINE_SPLIT)
+void inputFile_List(List *_list, const char *_file_name, const char *_token, const bool _LINE_SPLIT)
 {
     if (_list == NULL)
     {
@@ -717,7 +725,7 @@ void inputFile_List(List *_list, const char *_file_name, const char *_token, con
                     tmp = string_tmp + strlen(_token);
                 }
                 next_line = 1;
-                if (_LINE_SPLIT == LINE_SPLIT_FALSE)
+                if (_LINE_SPLIT == false)
                 {
                     strcpy(line, tmp);
                     next_line = 0;
